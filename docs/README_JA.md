@@ -40,7 +40,7 @@ Skill は軽量な汎用標準で、ワークフローと専門知識をパッ�
 
 ## 標準構造
 
-標準の定義によれば、各 Skill は標準化された命名のフォルダで、フロー、資料、スクリプトなど各種リソースを含みます。AI はこれらのコンテンツをコンテキスト内で段階的にインポートし、関連スキルを学習します。
+Agent Skills は Anthropic が開始し、コミュニティと共同で管理する[オープン仕様](https://agentskills.io/specification)です。各 Skill はワークフロー、資料、スクリプトなどを含む標準化フォルダで、Agent が段階的にロードします。
 
 ```markdown
 my-skill/
@@ -50,9 +50,11 @@ my-skill/
 └── assets/           # オプション：テンプレート、リソース
 ```
 
+`SKILL.md` の frontmatter には `name` と `description` が必須です。`license`、`compatibility`、`metadata`、実験的な `allowed-tools` も使用できます。名称は親ディレクトリと一致させ、本文は原則 500 行未満にします。`skills-ref validate ./my-skill` で検証できます。
+
 ## スキルのインストール
 
-Skill は Claude や ChatGPT のアプリ、Cursor や Claude Code などの IDE や TUI コーディングツール、OpenClaw などの Agent Harness で使用できます。
+Skill は Claude や ChatGPT のアプリ、Cursor や Claude Code などの IDE や TUI コーディングツール、その他の互換性のある Agent Harness で使用できます。
 
 Skill をインストールする本質は、Skill のフォルダを特定のディレクトリに配置することで、AI が必要に応じてロードして使用できるようにすることです。
 
@@ -77,46 +79,26 @@ Skill をインストールする本質は、Skill のフォルダを特定の�
 ```bash
 npx skills find [query]                          # 関連スキルを検索
 npx skills add <owner/repo>                      # スキルをインストール（GitHub 省略形、完全 URL、ローカルパス対応）
+npx skills add <owner/repo> --list               # リポジトリ内のスキルだけを確認
+npx skills use <owner/repo@skill>                # 永続インストールせず一時利用
 npx skills list                                  # インストール済みスキルをリスト表示
-npx skills check                                 # 利用可能なアップデートを確認
-npx skills update                                # すべてのスキルをアップグレード
+npx skills update [skill-name]                   # 1つ以上のスキルを更新
 npx skills remove [skill-name]                   # スキルをアンインストール
+npx skills init [skill-name]                     # スキルテンプレートを作成
 ```
 
-### OpenClaw エコシステム
-
-![](../assets/media/clawhub.png)
-
-国際的なネットワークにアクセスでき、公式版 OpenClaw を使用している場合は、公式の [ClawHub](https://clawhub.com/) マーケットプレイスの使用を推奨します。より技術志向のスキルを提供し、多くの海外製品との統合が含まれています。
+現在の CLI は 70 種類以上の Agent をサポートします。バージョン固定と来歴管理には、GitHub CLI 2.90.0+ の public preview `gh skill` も利用できます：
 
 ```bash
-npx clawhub search [query]          # 関連スキルを検索
-npx clawhub explore                 # マーケットプレイスを閲覧
-npx clawhub install <slug>          # スキルをインストール
-npx clawhub uninstall <slug>        # スキルをアンインストール
-npx clawhub list                    # インストール済みスキルをリスト表示
-npx clawhub update --all            # すべてのスキルをアップグレード
-npx clawhub inspect <slug>          # スキルの詳細を表示（インストールなし）
+gh skill search <query>
+gh skill preview <owner/repo> <skill>
+gh skill install <owner/repo> <skill>@<tag>
+gh skill install <owner/repo> <skill> --pin <sha>
+gh skill update --all
+gh skill publish
 ```
 
-![](../assets/media/skillshub.png)
-
-主に国内ネットワーク環境で使用する場合、または国内カスタマイズ版の OpenClaw を使用している場合は、Tencent が提供する [SkillHub](https://skillhub.tencent.com/) マーケットプレイスの使用を推奨します。中国ユーザーのニーズに合ったスキルが多数提供されています。
-
-まず、以下のコマンドで Skill Hub CLI ツールをインストールします：
-
-```bash
-curl -fsSL https://skillhub-1251783334.cos.ap-guangzhou.myqcloud.com/install/install.sh | bash
-```
-
-インストール後、以下のコマンドでスキルをインストール・管理できます：
-
-```bash
-skillhub search [query]           # 関連スキルを検索
-skillhub install <skill-name>     # スキル名でスキルを追加
-skillhub list                     # インストール済みスキルをリスト表示
-skillhub upgrade                  # インストール済みスキルをアップグレード
-```
+詳細は [GitHub の発表](https://github.blog/changelog/2026-04-16-manage-agent-skills-with-github-cli/) と [Agent Skills Client Showcase](https://agentskills.io/clients) を参照してください。
 
 ## 優質チュートリアル
 
@@ -152,8 +134,8 @@ skillhub upgrade                  # インストール済みスキルをアッ�
 <tr>
 <td><a href="https://github.com/elevenlabs/skills">elevenlabs</a></td>
 <td><a href="https://github.com/black-forest-labs/skills">black-forest-labs</a></td>
-<td></td>
-<td></td>
+<td><a href="https://github.com/google/skills">google</a></td>
+<td><a href="https://github.com/NVIDIA/skills">nvidia</a></td>
 <td></td>
 </tr>
 <tr><th colspan="5">☁️ クラウドサービスとインフラ</th></tr>
@@ -168,13 +150,20 @@ skillhub upgrade                  # インストール済みスキルをアッ�
 <td><a href="https://github.com/stripe/ai">stripe</a></td>
 <td><a href="https://github.com/launchdarkly/agent-skills">launchdarkly</a></td>
 <td><a href="https://github.com/getsentry/skills">sentry</a></td>
-<td></td>
+<td><a href="https://github.com/aws/agent-toolkit-for-aws">aws</a></td>
+<td><a href="https://github.com/amd/skills">amd</a></td>
+</tr>
+<tr>
+<td><a href="https://github.com/elastic/agent-skills">elastic</a></td>
+<td><a href="https://github.com/mongodb/agent-skills">mongodb</a></td>
+<td><a href="https://github.com/redis/agent-skills">redis</a></td>
+<td><a href="https://github.com/wandb/skills">wandb</a></td>
 <td></td>
 </tr>
 <tr><th colspan="5">🛠️ 開発フレームワークとツール</th></tr>
 <tr>
 <td><a href="https://github.com/vercel-labs/agent-skills">vercel</a></td>
-<td><a href="https://github.com/microsoft/agent-skills">microsoft</a></td>
+<td><a href="https://github.com/microsoft/skills">microsoft</a></td>
 <td><a href="https://github.com/expo/skills">expo</a></td>
 <td><a href="https://github.com/better-auth/skills">better-auth</a></td>
 <td><a href="https://github.com/posit-dev/skills">posit</a></td>
@@ -205,7 +194,7 @@ skillhub upgrade                  # インストール済みスキルをアッ�
 <td><a href="https://github.com/hardhackerlabs/podwise-cli">podwise-cli</a></td>
 <td><a href="https://github.com/wpsnote/wpsnote-skills">wps</a></td>
 <td><a href="https://github.com/marswaveai/skills">listenhub</a></td>
-<td></td>
+<td><a href="https://github.com/larksuite/cli">lark</a></td>
 <td></td>
 </tr>
 </table>
@@ -220,16 +209,20 @@ skillhub upgrade                  # インストール済みスキルをアッ�
 -   [code-review](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/code-review)：コードレビュースキル
 -   [code-simplifier](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/code-simplifier)：コード簡略化スキル
 -   [commit-commands](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/commit-commands)：Git コミットスキル
+-   [archify](https://github.com/tt-a1i/archify)：検証・エクスポート可能なアーキテクチャ図とフロー図
+-   [text-to-cad](https://github.com/earthtojake/text-to-cad)：CAD、CAE、CAM 向け Agent Skills
+-   [native-feel-skill](https://github.com/yetone/native-feel-skill)：クロスプラットフォーム・デスクトップアプリのネイティブ体験設計
 
 ### コンテンツ制作
 
 -   [baoyu-skills](https://github.com/JimLiu/baoyu-skills)：宝玉の個人用 Skills コレクション（WeChat 記事執筆、PPT 作成など）
 -   [libukai](https://github.com/libukai/awesome-agent-skills)：Obsidian 関連スキルコレクション、Obsidian の執筆シーンに特化
--   [op7418](https://github.com/op7418)：高品質な PPT 作成・YouTube 分析スキル
+-   [guizang-ppt-skill](https://github.com/op7418/guizang-ppt-skill)：高品質な HTML スライド生成
 -   [cclank](https://github.com/cclank/news-aggregator-skill)：指定分野の最新情報を自動収集・要約
 -   [huangserva](https://github.com/huangserva/skill-prompt-generator)：AI 人物画像テキスト生成プロンプトを生成・最適化
 -   [dontbesilent](https://github.com/dontbesilent2025/dbskill)：X のインフルエンサーが自身のツイートをもとに制作したコンテンツ制作フレームワーク
 -   [seekjourney](https://github.com/geekjourneyx/md2wechat-skill/)：執筆から公開まで AI 支援の WeChat 記事作成
+-   [cangjie-skill](https://github.com/kangarooking/cangjie-skill)：書籍、動画、ポッドキャストを実行可能な Agent Skills に蒸留
 
 ### 製品活用
 
@@ -237,6 +230,7 @@ skillhub upgrade                  # インストール済みスキルをアッ�
 -   [notebooklm](https://github.com/teng-lin/notebooklm-py)：NotebookLM を操作
 -   [n8n](https://github.com/czlonkowski/n8n-skills)：n8n ワークフローを作成
 -   [threejs](https://github.com/cloudai-x/threejs-skills)：Three.js プロジェクト開発を支援
+-   [skills-manage](https://github.com/iamzhihuix/skills-manage)：複数の Agent ホスト間でローカル Skills を管理
 
 ### その他
 
@@ -247,13 +241,11 @@ skillhub upgrade                  # インストール済みスキルをアッ�
 
 ## セキュリティ監査
 
-Skill には外部 API の呼び出しやスクリプトのサイレント実行など、潜在的なリスクを伴う操作が含まれている場合があるため、Skill の設計と使用においてセキュリティを十分に重視する必要があります。
+Skill は受動的な文書ではありません。description は発見に影響し、本文は Agent の挙動を変え、スクリプトはファイル、ネットワーク、認証情報、外部アカウントへアクセスできます。来歴、内容、依存関係、権限、ランタイム、更新の6層を確認してください。
 
-Skill をインストールする際は、公式ストアや信頼できるサードパーティストアのものを優先し、Skill の説明とユーザーレビューをよく読んで、出所不明の Skill のインストールを避けることをお勧めします。
+インストール前に `gh skill preview` または手動で全ファイルを確認し、tag/commit を固定します。実行時は最小権限、サンドボックス、重要操作の人間承認、監査ログを使用してください。ストア掲載、Star 数、仕様準拠だけでは安全性や有効性を証明できません。
 
-セキュリティ要件が高いシナリオでは、@余弦 の [slowmist-agent-security skill](https://github.com/slowmist/slowmist-agent-security) を使用して Skill のセキュリティ監査とリスク評価を行い、セキュリティと信頼性を確保できます。
-
-OpenClaw のような高度な自律権限を持つ Agent Harness を使用する場合は、[OpenClaw 極簡セキュリティ実践ガイド](https://github.com/slowmist/openclaw-security-practice-guide) を併用し、システムプロンプトレベルのセキュリティ制約を適用して、潜在的なリスクを最小限に抑えることをお勧めします。
+初期スキャンには [Cisco AI Defense Skill Scanner](https://github.com/cisco-ai-defense/skill-scanner) または [slowmist-agent-security](https://github.com/slowmist/slowmist-agent-security) を利用できます。[NVIDIA Verified Skills](https://developer.nvidia.com/blog/nvidia-verified-agent-skills-provide-capability-governance-for-ai-agents/) の Skill Card、スキャン、署名、来歴管理も参考になります。スキャナーは人手レビューと隔離実行の代替ではありません。
 
 ## スキルの作成
 
@@ -264,6 +256,16 @@ OpenClaw のような高度な自律権限を持つ Agent Harness を使用す�
 公式の [skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator) プラグインを使用して、個人専用の skill を迅速に作成・反復できます。
 
 ![](../assets/media/skill-creator.png)
+
+### テストと評価
+
+一度のデモ成功だけでは Skill の効果を証明できません。同じ実行可能タスクで with-skill / without-skill のペア評価を行い、成功率、トリガー精度、token、所要時間、ツール呼び出しを記録します。
+
+- [SkillsBench](https://www.skillsbench.ai/)：クロスドメイン評価ベンチマークとランキング
+- [microsoft/waza](https://github.com/microsoft/waza)：Skill の作成、テスト、計測、改善
+- [microsoft/SkillOpt](https://github.com/microsoft/SkillOpt)：軌跡と検証セットに基づくテキスト最適化
+- [alibaba/skill-up](https://github.com/alibaba/skill-up)：評価と進化のツール
+- [rpamis/comet](https://github.com/rpamis/comet)：アイデアを評価済み Agent ワークフローへ反復
 
 ### 強化プラグイン
 
@@ -291,7 +293,6 @@ Claude Code を起動し、プラグインマーケットプレイスに入り�
 - `/agent-skills-toolkit:create-skill` - 新しい skill を作成
 - `/agent-skills-toolkit:improve-skill` - 既存の skill を改善
 - `/agent-skills-toolkit:test-skill` - skill をテストして評価
-- `/agent-skills-toolkit:optimize-description` - 説明を最適化
 
 ## 謝辞
 

@@ -40,7 +40,7 @@ After half a year of development and iteration, Skill has become the standard so
 
 ## Standard Structure
 
-According to the standard definition, each Skill is a standardized named folder containing workflows, references, scripts, and other resources. AI progressively imports these contents in context to learn related skills.
+Agent Skills is an [open specification](https://agentskills.io/specification) initiated by Anthropic and maintained with the community. Each Skill is a standardized folder containing workflows, references, scripts, and other resources that an agent loads progressively.
 
 ```markdown
 my-skill/
@@ -50,9 +50,11 @@ my-skill/
 └── assets/           # Optional: templates, resources
 ```
 
+The `SKILL.md` frontmatter requires `name` and `description`; optional fields include `license`, `compatibility`, `metadata`, and the experimental `allowed-tools`. The name must match its parent directory, and the main file should generally stay below 500 lines. Validate it with `skills-ref validate ./my-skill`.
+
 ## Install Skills
 
-Skills can be used in Claude and ChatGPT apps, IDE and TUI coding tools like Cursor and Claude Code, and Agent Harnesses like OpenClaw.
+Skills can be used in Claude and ChatGPT apps, IDE and TUI coding tools like Cursor and Claude Code, and other compatible agent harnesses.
 
 The essence of installing a Skill is simply placing the Skill's folder into a specific directory so that AI can load and use it on demand.
 
@@ -77,46 +79,26 @@ For specific skills, use the `npx skills` command-line tool to quickly discover,
 ```bash
 npx skills find [query]                          # Search for related skills
 npx skills add <owner/repo>                      # Install skills (supports GitHub shorthand, full URL, local path)
+npx skills add <owner/repo> --list               # Preview the skills in a repository
+npx skills use <owner/repo@skill>                # Use temporarily without installing
 npx skills list                                  # List installed skills
-npx skills check                                 # Check for available updates
-npx skills update                                # Upgrade all skills
+npx skills update [skill-name]                   # Update one or more skills
 npx skills remove [skill-name]                   # Uninstall skills
+npx skills init [skill-name]                     # Create a skill template
 ```
 
-### OpenClaw Ecosystem
-
-![](../assets/media/clawhub.png)
-
-If you have access to international networks and use the official OpenClaw version, it is recommended to use the official [ClawHub](https://clawhub.com/) marketplace, which provides more technical-oriented skills and includes integration with many overseas products.
+The current CLI supports more than 70 agents. For version pinning and portable provenance, GitHub CLI 2.90.0+ also provides the public-preview `gh skill` commands:
 
 ```bash
-npx clawhub search [query]          # Search for related skills
-npx clawhub explore                 # Browse the marketplace
-npx clawhub install <slug>          # Install a skill
-npx clawhub uninstall <slug>        # Uninstall a skill
-npx clawhub list                    # List installed skills
-npx clawhub update --all            # Upgrade all skills
-npx clawhub inspect <slug>          # View skill details (without installing)
+gh skill search <query>
+gh skill preview <owner/repo> <skill>
+gh skill install <owner/repo> <skill>@<tag>
+gh skill install <owner/repo> <skill> --pin <sha>
+gh skill update --all
+gh skill publish
 ```
 
-![](../assets/media/skillshub.png)
-
-For users primarily on domestic networks or using a domestically customized version of OpenClaw, it is recommended to use Tencent's [SkillHub](https://skillhub.tencent.com/) marketplace, which offers many skills better suited to Chinese users' needs.
-
-First, install the Skill Hub CLI tool with the following command:
-
-```bash
-curl -fsSL https://skillhub-1251783334.cos.ap-guangzhou.myqcloud.com/install/install.sh | bash
-```
-
-After installation, use the following commands to install and manage skills:
-
-```bash
-skillhub search [query]           # Search for related skills
-skillhub install <skill-name>     # Add a skill by name
-skillhub list                     # List installed skills
-skillhub upgrade                  # Upgrade installed skills
-```
+See the [GitHub announcement](https://github.blog/changelog/2026-04-16-manage-agent-skills-with-github-cli/) and the official [Agent Skills client showcase](https://agentskills.io/clients) for host-specific support.
 
 ## Quality Tutorials
 
@@ -152,8 +134,8 @@ skillhub upgrade                  # Upgrade installed skills
 <tr>
 <td><a href="https://github.com/elevenlabs/skills">elevenlabs</a></td>
 <td><a href="https://github.com/black-forest-labs/skills">black-forest-labs</a></td>
-<td></td>
-<td></td>
+<td><a href="https://github.com/google/skills">google</a></td>
+<td><a href="https://github.com/NVIDIA/skills">nvidia</a></td>
 <td></td>
 </tr>
 <tr><th colspan="5">☁️ Cloud Services & Infrastructure</th></tr>
@@ -168,13 +150,20 @@ skillhub upgrade                  # Upgrade installed skills
 <td><a href="https://github.com/stripe/ai">stripe</a></td>
 <td><a href="https://github.com/launchdarkly/agent-skills">launchdarkly</a></td>
 <td><a href="https://github.com/getsentry/skills">sentry</a></td>
-<td></td>
+<td><a href="https://github.com/aws/agent-toolkit-for-aws">aws</a></td>
+<td><a href="https://github.com/amd/skills">amd</a></td>
+</tr>
+<tr>
+<td><a href="https://github.com/elastic/agent-skills">elastic</a></td>
+<td><a href="https://github.com/mongodb/agent-skills">mongodb</a></td>
+<td><a href="https://github.com/redis/agent-skills">redis</a></td>
+<td><a href="https://github.com/wandb/skills">wandb</a></td>
 <td></td>
 </tr>
 <tr><th colspan="5">🛠️ Dev Frameworks & Tools</th></tr>
 <tr>
 <td><a href="https://github.com/vercel-labs/agent-skills">vercel</a></td>
-<td><a href="https://github.com/microsoft/agent-skills">microsoft</a></td>
+<td><a href="https://github.com/microsoft/skills">microsoft</a></td>
 <td><a href="https://github.com/expo/skills">expo</a></td>
 <td><a href="https://github.com/better-auth/skills">better-auth</a></td>
 <td><a href="https://github.com/posit-dev/skills">posit</a></td>
@@ -205,7 +194,7 @@ skillhub upgrade                  # Upgrade installed skills
 <td><a href="https://github.com/hardhackerlabs/podwise-cli">podwise-cli</a></td>
 <td><a href="https://github.com/wpsnote/wpsnote-skills">wps</a></td>
 <td><a href="https://github.com/marswaveai/skills">listenhub</a></td>
-<td></td>
+<td><a href="https://github.com/larksuite/cli">lark</a></td>
 <td></td>
 </tr>
 </table>
@@ -220,16 +209,20 @@ skillhub upgrade                  # Upgrade installed skills
 -   [code-review](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/code-review): Code review skills
 -   [code-simplifier](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/code-simplifier): Code simplification skills
 -   [commit-commands](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/commit-commands): Git commit skills
+-   [archify](https://github.com/tt-a1i/archify): Verifiable, exportable architecture and workflow diagrams
+-   [text-to-cad](https://github.com/earthtojake/text-to-cad): CAD, CAE, and CAM agent skills
+-   [native-feel-skill](https://github.com/yetone/native-feel-skill): Native-feeling cross-platform desktop app guidance
 
 ### Content Creation
 
 -   [baoyu-skills](https://github.com/JimLiu/baoyu-skills): Baoyu's personal Skills collection, including WeChat article writing, PPT creation, etc.
 -   [libukai](https://github.com/libukai/awesome-agent-skills): Obsidian-related skill collection, tailored for Obsidian writing workflows
--   [op7418](https://github.com/op7418): High-quality PPT creation and YouTube analysis skills
+-   [guizang-ppt-skill](https://github.com/op7418/guizang-ppt-skill): Polished HTML slide-deck generation
 -   [cclank](https://github.com/cclank/news-aggregator-skill): Automatically fetch and summarize the latest news in specified domains
 -   [huangserva](https://github.com/huangserva/skill-prompt-generator): Generate and optimize AI portrait text-to-image prompts
 -   [dontbesilent](https://github.com/dontbesilent2025/dbskill): Content creation framework by an X influencer based on their own tweets
 -   [seekjourney](https://github.com/geekjourneyx/md2wechat-skill/): AI-assisted WeChat article writing from drafting to publishing
+-   [cangjie-skill](https://github.com/kangarooking/cangjie-skill): Distill books, videos, and podcasts into executable Agent Skills
 
 ### Product Usage
 
@@ -237,6 +230,7 @@ skillhub upgrade                  # Upgrade installed skills
 -   [notebooklm](https://github.com/teng-lin/notebooklm-py): Control NotebookLM
 -   [n8n](https://github.com/czlonkowski/n8n-skills): Create n8n workflows
 -   [threejs](https://github.com/cloudai-x/threejs-skills): Assist with Three.js development
+-   [skills-manage](https://github.com/iamzhihuix/skills-manage): Manage local Skills across multiple agent hosts
 
 ### Other Types
 
@@ -247,13 +241,11 @@ skillhub upgrade                  # Upgrade installed skills
 
 ## Security Audit
 
-Since Skills may contain potentially risky operations such as calling external APIs or silently executing scheduled scripts, security must be taken seriously when designing and using Skills.
+Skills are not passive documentation: descriptions influence discovery, instructions change agent behavior, and scripts may access files, networks, credentials, and external accounts. Review six layers of risk: provenance, content, dependencies, permissions, runtime, and updates.
 
-When installing Skills, it is recommended to prioritize those from official stores or well-known third-party stores, and carefully read the Skill's description and user reviews to avoid installing Skills from unknown sources.
+Before installation, prefer official or trusted maintainers, inspect every file with `gh skill preview` or manually, and pin a tag or commit. At runtime, use least privilege, sandboxing, human approval for sensitive actions, and audit logs. Marketplace inclusion, stars, and spec compliance do not prove safety or effectiveness.
 
-For scenarios with higher security requirements, you can use @余弦's [slowmist-agent-security skill](https://github.com/slowmist/slowmist-agent-security) to conduct security audits and risk assessments of Skills, ensuring their security and reliability.
-
-If using Agent Harnesses with high autonomy like OpenClaw, it is recommended to use the [OpenClaw Minimal Security Practice Guide](https://github.com/slowmist/openclaw-security-practice-guide) together, applying system prompt-level security constraints to minimize potential risks.
+For an initial scan, use [Cisco AI Defense Skill Scanner](https://github.com/cisco-ai-defense/skill-scanner) or [slowmist-agent-security](https://github.com/slowmist/slowmist-agent-security). Also see the provenance, skill-card, scanning, and signing model used by [NVIDIA Verified Skills](https://developer.nvidia.com/blog/nvidia-verified-agent-skills-provide-capability-governance-for-ai-agents/). Scanners are signals, not substitutes for review and isolation.
 
 ## Create Skills
 
@@ -264,6 +256,16 @@ While you can directly install skills created by others through skill marketplac
 Use the official [skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator) plugin to quickly create and iterate personal skills.
 
 ![](../assets/media/skill-creator.png)
+
+### Testing and Evaluation
+
+A successful demo does not prove that a Skill improves an agent. Run paired with-skill / without-skill tasks and track success rate, trigger accuracy, tokens, wall time, and tool calls.
+
+- [SkillsBench](https://www.skillsbench.ai/): cross-domain benchmark and leaderboard
+- [microsoft/waza](https://github.com/microsoft/waza): create, test, measure, and improve Skills
+- [microsoft/SkillOpt](https://github.com/microsoft/SkillOpt): trajectory- and validation-driven text optimization
+- [alibaba/skill-up](https://github.com/alibaba/skill-up): evaluation and evolution tooling
+- [rpamis/comet](https://github.com/rpamis/comet): turn ideas into evaluated agent workflows
 
 ### Enhanced Plugin
 
@@ -291,7 +293,6 @@ The plugin includes multiple quick commands covering the complete workflow from 
 - `/agent-skills-toolkit:create-skill` - Create new skill
 - `/agent-skills-toolkit:improve-skill` - Improve existing skill
 - `/agent-skills-toolkit:test-skill` - Test and evaluate skill
-- `/agent-skills-toolkit:optimize-description` - Optimize description
 
 ## Acknowledgments
 
