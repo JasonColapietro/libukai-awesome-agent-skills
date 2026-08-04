@@ -34,6 +34,8 @@
 
 Skill 是一种轻量级的 Agent 构建方案，通过封装特定的业务流程与行业知识，强化 AI 执行特定任务的专业能力。
 
+![](assets/media/model-harness-skill.png)
+
 面对重复性的任务需求，你无需在每次对话中反复输入背景信息。只需安装对应的 Skill，AI 即可习得该领域的专业技能。
 
 历经半年的迭代演进，Skill 已成为增强 AI 垂直领域能力的标准方案，并获得了各类 Agent 框架与 AI 产品的广泛支持。
@@ -47,20 +49,32 @@ my-skill/
 ├── SKILL.md          # 必需：流程说明和元数据
 ├── references/       # 可选：参考资料
 ├── scripts/          # 可选：可执行脚本
-└── assets/           # 可选：模板、资源
+├── assets/           # 可选：模板、资源
+└── ...               # 其他附加文件或者文件夹
 ```
 
-`SKILL.md` 的 YAML frontmatter 必须包含 `name` 和 `description`，还可声明 `license`、`compatibility`、`metadata`，以及实验性的 `allowed-tools`。名称需要与父目录一致，正文建议少于 500 行。可使用官方参考实现校验：
+`SKILL.md` 的 YAML frontmatter 必须包含 `name` 和 `description`，还可声明 `license`、`compatibility`、`metadata`，以及实验性的 `allowed-tools`。
 
-```bash
-skills-ref validate ./my-skill
-```
+`name` 最长 64 个字符，只能使用小写字母、数字和连字符，且必须与父目录一致；`description` 最长 1024 个字符，需要同时说明“做什么”和“何时使用”。正文建议少于 500 行、5000 tokens，详细内容应拆到独立资源文件中。
+
+Agent 通常分三个阶段加载 Skill：启动时只读取所有 Skill 的 `name` 和 `description` 用于发现；任务匹配后再激活并加载完整 `SKILL.md`；执行过程中仅按需读取 `scripts/`、`references/` 和 `assets/`。这也是渐进式披露能够同时维持大量 Skill、又不过度占用上下文的原因。
 
 ## 安装技能
 
 Skill 可以在 Claude 和 ChatGPT 这类 GUI App 中使用，也可以在 Cursor、Claude Code 等 IDE、TUI CLI 与其他兼容的 Agent Harness 中使用。
 
 安装 Skill 过程的本质，其实就是将 Skill 对应的文件夹放到特定的目录下，以便 AI 能按需加载和使用。
+
+### 通用目录约定
+
+越来越多兼容客户端会扫描 `.agents/skills/`，可分别在项目级和用户级安装：
+
+```text
+<project>/.agents/skills/<skill-name>/
+~/.agents/skills/<skill-name>/
+```
+
+同名 Skill 通常由项目级覆盖用户级；不同客户端还可能扫描自己的原生目录。具体路径应以对应产品文档为准。项目级 Skill 会随仓库进入工作区，因此加载陌生仓库中的 Skill 前仍需检查来源和内容。详见[官方客户端接入指南](https://agentskills.io/client-implementation/adding-skills-support)。
 
 ### 类 Claude App 生态
 
@@ -116,6 +130,9 @@ gh skill publish                                 # 校验并发布技能
 
 ### 官方文档
 
+- @Agent Skills：[官方概览](https://agentskills.io/home)、[完整规范](https://agentskills.io/specification)、[快速入门](https://agentskills.io/skill-creation/quickstart)
+- @Agent Skills：[创作最佳实践](https://agentskills.io/skill-creation/best-practices)、[质量评测](https://agentskills.io/skill-creation/evaluating-skills)、[description 优化](https://agentskills.io/skill-creation/optimizing-descriptions)、[脚本设计](https://agentskills.io/skill-creation/using-scripts)
+- @Agent Skills：[为 Agent 添加 Skills 支持](https://agentskills.io/client-implementation/adding-skills-support)
 - @Anthropic：[Claude Skill 完全构建指南](docs/Claude-Skills-完全构建指南.md) 
 - @Anthropic：[Claude Agent Skills 实战经验](docs/Claude-Code-Skills-实战经验.md)
 - @Google：[Agent Skills 五种设计模式](docs/Agent-Skill-五种设计模式.md)
@@ -264,16 +281,37 @@ Skill 不只是文档：它的描述会影响检索和选择，正文会改变 A
 
 虽然可以通过技能商店直接安装他人创建的技能，但是为了提升技能的适配度和个性化，强烈建议根据需要自己动手创建技能，或者在其他人的基础上进行微调。
 
+### 设计原则
+
+- 从真实任务中提炼：优先使用实际执行步骤、人工纠正、项目文档、故障案例和历史修复，而不是让模型凭通用知识生成空泛流程。
+- 保持边界完整：一个 Skill 应覆盖一个可组合、可独立验收的任务单元；过窄会增加加载和冲突成本，过宽则难以准确触发。
+- 节约上下文：只写 Agent 容易做错或无法自行知道的内容，把细节拆到聚焦的引用文件，并明确何时读取。
+- 校准控制强度：脆弱、不可逆或顺序敏感的步骤写得严格；存在多种合理路径的任务说明目标与原因，保留判断空间。
+- 提供默认方案：优先给出一个可靠默认和必要的退出路径，使用可复用流程，不要堆砌平级选项或只针对单次任务的答案。
+- 内置反馈闭环：使用 Gotchas、输出模板、检查清单、验证循环和 plan-validate-execute，让失败能够产生下一轮可复用的修正。
+
+### 脚本与资源
+
+已有工具能够稳定完成的一次性操作，可以直接在 `SKILL.md` 中引用命令；反复出现或参数复杂的逻辑，应固化为经过测试的 `scripts/`。引用文件一律使用相对 Skill 根目录的路径，并在说明中明确何时调用。
+
+- 固定依赖版本，并通过 `compatibility` 或正文声明运行环境和网络要求。
+- 避免交互式提示，所有输入通过参数、环境变量或 stdin 传入，并提供简洁的 `--help`。
+- 错误信息应说明实际问题、期望值和下一步；结构化数据写入 stdout，诊断和进度信息写入 stderr。
+- `references/` 中的文件保持聚焦，避免让 Agent 沿着多层链接才能找到真正需要的内容。
+
+详见官方的 [Using scripts in skills](https://agentskills.io/skill-creation/using-scripts) 指南。
+
 ### 官方插件
 
-通过官方出品的  [skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator) 插件可快速创建和迭代个人专属的 skill。
-
+通过官方出品的 [skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator) 插件可快速创建和迭代个人专属的 skill。
 
 ![](assets/media/skill-creator.png)
 
 ### 测试与评测
 
-一个 Skill 能被加载或完成一次演示，不代表它真正提升了 Agent。建议使用同一组可执行任务进行 with-skill / without-skill 配对评测，至少记录成功率、触发准确率、token、耗时和工具调用，并保留负向样例。
+一个 Skill 能被加载或完成一次演示，不代表它真正提升了 Agent。建议先在 `evals/evals.json` 中保存 2～3 个真实测试任务，为每个任务记录 `prompt`、`expected_output`、可选输入文件和可验证的 `assertions`；随后在干净上下文中分别执行 with-skill / without-skill（或新旧版本）评测，记录成功率、token、耗时、工具调用以及支持 PASS/FAIL 的具体证据。
+
+触发评测应独立检查 `description`：同时准备应该触发和不应触发的近似真实请求，覆盖不同措辞、复杂度和隐式意图，并保留验证集防止针对固定关键词过拟合。完整流程可参考官方的[质量评测](https://agentskills.io/skill-creation/evaluating-skills)与[描述优化](https://agentskills.io/skill-creation/optimizing-descriptions)指南。
 
 - [SkillsBench](https://www.skillsbench.ai/)：跨领域评测 Skill 实际增益的基准与排行榜
 - [microsoft/waza](https://github.com/microsoft/waza)：创建、测试、度量和改进 Agent Skills

@@ -50,13 +50,26 @@ my-skill/
 └── assets/           # Optional: templates, resources
 ```
 
-The `SKILL.md` frontmatter requires `name` and `description`; optional fields include `license`, `compatibility`, `metadata`, and the experimental `allowed-tools`. The name must match its parent directory, and the main file should generally stay below 500 lines. Validate it with `skills-ref validate ./my-skill`.
+The `SKILL.md` frontmatter requires `name` and `description`; optional fields include `license`, `compatibility`, `metadata`, and the experimental `allowed-tools`. `name` is limited to 64 characters, uses lowercase letters, numbers, and hyphens, and must match its parent directory. `description` is limited to 1,024 characters and should explain both what the skill does and when to use it. Keep the main file below 500 lines and 5,000 tokens, moving detail into focused resource files.
+
+Validate a skill with `skills-ref validate ./my-skill`. Agents then load it in three stages: discover all skills from `name` and `description`, activate the full `SKILL.md` when a task matches, and read scripts, references, and assets only as execution requires them. This progressive disclosure keeps a large skill catalog available without loading every instruction up front.
 
 ## Install Skills
 
 Skills can be used in Claude and ChatGPT apps, IDE and TUI coding tools like Cursor and Claude Code, and other compatible agent harnesses.
 
 The essence of installing a Skill is simply placing the Skill's folder into a specific directory so that AI can load and use it on demand.
+
+### Shared Directory Convention
+
+Many compatible clients scan `.agents/skills/` at both project and user scope:
+
+```text
+<project>/.agents/skills/<skill-name>/
+~/.agents/skills/<skill-name>/
+```
+
+A project-level skill normally overrides a user-level skill with the same name. Clients may also scan their own native directories, so confirm exact paths in the product documentation. Because project skills arrive with a repository, inspect the source and contents before trusting skills from an unfamiliar checkout. See the official [client implementation guide](https://agentskills.io/client-implementation/adding-skills-support).
 
 ### Claude App Ecosystem
 
@@ -104,6 +117,9 @@ See the [GitHub announcement](https://github.blog/changelog/2026-04-16-manage-ag
 
 ### Official Documentation
 
+- @Agent Skills: [Overview](https://agentskills.io/home), [Specification](https://agentskills.io/specification), and [Quickstart](https://agentskills.io/skill-creation/quickstart)
+- @Agent Skills: [Creator best practices](https://agentskills.io/skill-creation/best-practices), [Quality evaluation](https://agentskills.io/skill-creation/evaluating-skills), [Description optimization](https://agentskills.io/skill-creation/optimizing-descriptions), and [Script design](https://agentskills.io/skill-creation/using-scripts)
+- @Agent Skills: [Add Skills support to an agent](https://agentskills.io/client-implementation/adding-skills-support)
 - @Anthropic: [Claude Skills Complete Build Guide](Claude-Skills-完全构建指南.md)
 - @Anthropic: [Claude Agent Skills Practical Experience](Claude-Code-Skills-实战经验.md)
 - @Google: [5 Agent Skill Design Patterns](Agent-Skill-五种设计模式.md)
@@ -251,6 +267,26 @@ For an initial scan, use [Cisco AI Defense Skill Scanner](https://github.com/cis
 
 While you can directly install skills created by others through skill marketplaces, to improve skill fit and personalization, it is strongly recommended to create your own skills as needed, or fine-tune others' skills.
 
+### Design Principles
+
+- Start from real work: extract successful steps, human corrections, project artifacts, failure cases, and historical fixes instead of generating generic procedures from model knowledge alone.
+- Keep a coherent boundary: one Skill should cover a composable task with an independently verifiable outcome. Overly narrow skills add loading and conflict overhead; broad skills trigger imprecisely.
+- Spend context carefully: include what an agent would otherwise miss or get wrong, move detail into focused reference files, and say exactly when each file should be read.
+- Calibrate control: prescribe fragile, irreversible, or order-sensitive operations; explain goals and reasoning where several approaches are valid.
+- Provide defaults: offer one reliable default with a clear escape hatch, favor reusable procedures, and avoid menus of equal options or answers tailored to one instance.
+- Build a feedback loop with gotchas, output templates, checklists, validation loops, and plan-validate-execute workflows.
+
+### Scripts and Resources
+
+Reference an existing command directly when it reliably handles a simple one-off operation. Move repeated or complex logic into tested scripts under `scripts/`. Use paths relative to the skill root and tell the agent exactly when to invoke each file.
+
+- Pin dependency versions and declare runtime or network requirements in `compatibility` or the instructions.
+- Avoid interactive prompts. Accept input through flags, environment variables, or stdin, and provide concise `--help` output.
+- Make errors actionable. Write structured data to stdout and diagnostics or progress to stderr.
+- Keep files in `references/` focused and avoid deep chains of references.
+
+See the official [Using scripts in skills](https://agentskills.io/skill-creation/using-scripts) guide.
+
 ### Official Plugin
 
 Use the official [skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator) plugin to quickly create and iterate personal skills.
@@ -259,7 +295,9 @@ Use the official [skill-creator](https://github.com/anthropics/skills/tree/main/
 
 ### Testing and Evaluation
 
-A successful demo does not prove that a Skill improves an agent. Run paired with-skill / without-skill tasks and track success rate, trigger accuracy, tokens, wall time, and tool calls.
+A successful demo does not prove that a Skill improves an agent. Start with two or three realistic tasks in `evals/evals.json`, recording each `prompt`, `expected_output`, optional input files, and verifiable `assertions`. Run each task in a clean context with and without the skill—or against the previous version—and record pass rate, tokens, wall time, tool calls, and concrete evidence for every PASS or FAIL.
+
+Evaluate triggering separately from output quality. Test `description` against realistic should-trigger and near-miss should-not-trigger queries across varied wording, complexity, and implicit intent, and retain a validation split to avoid keyword overfitting. See the official guides to [evaluating skill output](https://agentskills.io/skill-creation/evaluating-skills) and [optimizing descriptions](https://agentskills.io/skill-creation/optimizing-descriptions).
 
 - [SkillsBench](https://www.skillsbench.ai/): cross-domain benchmark and leaderboard
 - [microsoft/waza](https://github.com/microsoft/waza): create, test, measure, and improve Skills

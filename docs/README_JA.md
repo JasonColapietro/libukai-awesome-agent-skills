@@ -50,13 +50,26 @@ my-skill/
 └── assets/           # オプション：テンプレート、リソース
 ```
 
-`SKILL.md` の frontmatter には `name` と `description` が必須です。`license`、`compatibility`、`metadata`、実験的な `allowed-tools` も使用できます。名称は親ディレクトリと一致させ、本文は原則 500 行未満にします。`skills-ref validate ./my-skill` で検証できます。
+`SKILL.md` の frontmatter には `name` と `description` が必須です。`license`、`compatibility`、`metadata`、実験的な `allowed-tools` も使用できます。`name` は64文字以内の小文字、数字、ハイフンで構成し、親ディレクトリ名と一致させます。`description` は1024文字以内で、Skill が「何をするか」と「いつ使うか」の両方を記述します。本文は500行、5000 tokens 未満を目安とし、詳細は用途ごとに分けたリソースファイルへ移します。
+
+`skills-ref validate ./my-skill` で検証できます。Agent はまず全 Skill の `name` と `description` だけを読み取って発見し、タスクが一致した時に完全な `SKILL.md` を有効化し、実行中に必要な scripts、references、assets だけを読み込みます。この段階的開示により、すべての指示を先にロードせず、多数の Skill を利用できます。
 
 ## スキルのインストール
 
 Skill は Claude や ChatGPT のアプリ、Cursor や Claude Code などの IDE や TUI コーディングツール、その他の互換性のある Agent Harness で使用できます。
 
 Skill をインストールする本質は、Skill のフォルダを特定のディレクトリに配置することで、AI が必要に応じてロードして使用できるようにすることです。
+
+### 共通ディレクトリ規約
+
+多くの互換クライアントは、プロジェクトとユーザーの両スコープで `.agents/skills/` を検索します：
+
+```text
+<project>/.agents/skills/<skill-name>/
+~/.agents/skills/<skill-name>/
+```
+
+同名の Skill は通常、プロジェクトレベルがユーザーレベルより優先されます。クライアント固有のディレクトリも検索される場合があるため、正確なパスは各製品のドキュメントを確認してください。プロジェクト Skill はリポジトリと一緒に取得されるため、未知のリポジトリでは信頼する前に出所と内容を確認します。詳細は公式の[クライアント実装ガイド](https://agentskills.io/client-implementation/adding-skills-support)を参照してください。
 
 ### Claude App エコシステム
 
@@ -104,6 +117,9 @@ gh skill publish
 
 ### 公式ドキュメント
 
+- @Agent Skills：[概要](https://agentskills.io/home)、[仕様](https://agentskills.io/specification)、[クイックスタート](https://agentskills.io/skill-creation/quickstart)
+- @Agent Skills：[作成ベストプラクティス](https://agentskills.io/skill-creation/best-practices)、[品質評価](https://agentskills.io/skill-creation/evaluating-skills)、[description 最適化](https://agentskills.io/skill-creation/optimizing-descriptions)、[スクリプト設計](https://agentskills.io/skill-creation/using-scripts)
+- @Agent Skills：[Agent に Skills サポートを追加する](https://agentskills.io/client-implementation/adding-skills-support)
 - @Anthropic：[Claude Skills 完全構築ガイド](Claude-Skills-完全構建指南.md)
 - @Anthropic：[Claude Agent Skills 実践経験](Claude-Code-Skills-実战経験.md)
 - @Google：[Agent Skills 5つのデザインパターン](Agent-Skill-五种设计模式.md)
@@ -251,6 +267,26 @@ Skill は受動的な文書ではありません。description は発見に影�
 
 技能ショップから他の人が作成したスキルを直接インストールできますが、適合度とパーソナライズを高めるため、必要に応じて自分でスキルを作成するか、他の人のものをベースに微調整することを強くお勧めします。
 
+### 設計原則
+
+- 実作業から抽出する：モデルの一般知識だけで曖昧な手順を生成せず、成功した手順、人間による修正、プロジェクト資料、障害事例、過去の修正を利用します。
+- 一貫した境界を保つ：1つの Skill は、組み合わせ可能で独立して検証できるタスク単位を扱います。狭すぎるとロードと競合のコストが増え、広すぎると正確に起動できません。
+- コンテキストを節約する：Agent が知らない、または間違えやすい内容に集中し、詳細は用途別の参照ファイルへ移して読み込む条件を明示します。
+- 制御の強さを調整する：壊れやすい、不可逆、順序依存の操作は厳密に指定し、複数の妥当な方法があるタスクでは目的と理由を説明して判断の余地を残します。
+- デフォルトを提示する：信頼できる既定手段と必要な回避策を示し、同列の選択肢や1回限りの回答ではなく再利用可能な手順を優先します。
+- フィードバックループを組み込む：Gotchas、出力テンプレート、チェックリスト、検証ループ、plan-validate-execute を活用します。
+
+### スクリプトとリソース
+
+既存ツールで安定して処理できる単純な一回限りの操作は、`SKILL.md` からコマンドを直接参照できます。繰り返す処理や複雑なロジックは、テスト済みの `scripts/` に移します。パスは Skill ルートからの相対パスを使い、各ファイルをいつ呼び出すか明記します。
+
+- 依存バージョンを固定し、実行環境やネットワーク要件を `compatibility` または本文に記載します。
+- 対話式入力を避け、引数、環境変数、stdin で入力を受け取り、簡潔な `--help` を提供します。
+- エラーを次の行動につながる内容にし、構造化データは stdout、診断や進捗は stderr に出力します。
+- `references/` 内のファイルは焦点を絞り、深い参照チェーンを避けます。
+
+公式の [Using scripts in skills](https://agentskills.io/skill-creation/using-scripts) ガイドも参照してください。
+
 ### 公式プラグイン
 
 公式の [skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator) プラグインを使用して、個人専用の skill を迅速に作成・反復できます。
@@ -259,7 +295,9 @@ Skill は受動的な文書ではありません。description は発見に影�
 
 ### テストと評価
 
-一度のデモ成功だけでは Skill の効果を証明できません。同じ実行可能タスクで with-skill / without-skill のペア評価を行い、成功率、トリガー精度、token、所要時間、ツール呼び出しを記録します。
+一度のデモ成功だけでは Skill の効果を証明できません。まず `evals/evals.json` に2～3件の現実的なテストを保存し、各 `prompt`、`expected_output`、任意の入力ファイル、検証可能な `assertions` を記録します。その後、クリーンなコンテキストで with-skill / without-skill、または新旧バージョンを実行し、成功率、token、所要時間、ツール呼び出し、各 PASS/FAIL の具体的根拠を比較します。
+
+起動評価は出力品質と分けて行います。`description` に対し、異なる表現、複雑さ、暗黙の意図を含む should-trigger と近似した should-not-trigger の現実的な要求を用意し、検証セットを保持してキーワードへの過学習を防ぎます。公式の[品質評価](https://agentskills.io/skill-creation/evaluating-skills)と[description 最適化](https://agentskills.io/skill-creation/optimizing-descriptions)も参照してください。
 
 - [SkillsBench](https://www.skillsbench.ai/)：クロスドメイン評価ベンチマークとランキング
 - [microsoft/waza](https://github.com/microsoft/waza)：Skill の作成、テスト、計測、改善
