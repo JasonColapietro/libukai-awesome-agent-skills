@@ -326,10 +326,10 @@ Skill 评估可以分为两个维度：**`description` 评估**检查 Agent 在�
 
 现有研究的共同结论是：聚焦单一任务、带明确验收标准和持续回归的 Skill，通常比大而全的知识包更可靠；过时或不匹配的 Skill 可能增加成本甚至降低成功率。
 
-## 致谢
+## 特别致谢
 
 ![](assets/media/talk_is_cheap.jpg)
 
 ## 项目历史
 
-[![Star History Chart](https://api.star-history.com/chart?repos=libukai/awesome-agent-skills&type=date&legend=top-left&sealed_token=tZ9Tp9xJWV8VDkQV5ASKbgCgErB-VnSuGhtK-ycbymvrVC3s9cBzKZFoxwMsVu_c9JU1lRj8kpFXCwBQddzAN51sT7SMWKdgtO2BduMINIp-1vPAPec_5iXfmaRtVQMcG5m2GsFwUbJwnOGVBEaoal7Q_6GjzRfJnHkeyiKa6ElUSP_POZP4218CvHXu)](https://www.star-history.com/?repos=libukai%2Fawesome-agent-skills&type=date&legend=top-left)
+[![](assets/media/20260805233809.png)](https://www.star-history.com/?repos=libukai%2Fawesome-agent-skills&type=date&legend=top-left)

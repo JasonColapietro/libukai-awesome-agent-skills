@@ -320,10 +320,10 @@ For the complete workflow, see the official guides to [evaluating Skill output](
 
 Existing research points to the same conclusion: a focused Skill with explicit acceptance criteria and continuous regression testing is usually more reliable than an all-encompassing knowledge bundle; an outdated or mismatched Skill can increase cost and even reduce success rates.
 
-## Acknowledgments
+## Special Thanks
 
 ![](../assets/media/talk_is_cheap.jpg)
 
 ## Project History
 
-[![Star History Chart](https://api.star-history.com/chart?repos=libukai/awesome-agent-skills&type=date&legend=top-left&sealed_token=tZ9Tp9xJWV8VDkQV5ASKbgCgErB-VnSuGhtK-ycbymvrVC3s9cBzKZFoxwMsVu_c9JU1lRj8kpFXCwBQddzAN51sT7SMWKdgtO2BduMINIp-1vPAPec_5iXfmaRtVQMcG5m2GsFwUbJwnOGVBEaoal7Q_6GjzRfJnHkeyiKa6ElUSP_POZP4218CvHXu)](https://www.star-history.com/?repos=libukai%2Fawesome-agent-skills&type=date&legend=top-left)
+[![](../assets/media/20260805233809.png)](https://www.star-history.com/?repos=libukai%2Fawesome-agent-skills&type=date&legend=top-left)
