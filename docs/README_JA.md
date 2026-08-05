@@ -320,10 +320,10 @@ Skill の評価は2つの観点に分けられます。**`description` 評価**�
 
 既存研究が示す共通の結論は、明確な受け入れ基準と継続的な回帰テストを備えた、単一タスクに集中する Skill のほうが、範囲の広すぎる知識パッケージより一般に信頼できるということです。古い、またはタスクに適合しない Skill は、コストを増やし、成功率を下げる可能性があります。
 
-## 謝辞
+## 特別謝辞
 
 ![](../assets/media/talk_is_cheap.jpg)
 
 ## プロジェクト履歴
 
-[![Star History Chart](https://api.star-history.com/chart?repos=libukai/awesome-agent-skills&type=date&legend=top-left&sealed_token=tZ9Tp9xJWV8VDkQV5ASKbgCgErB-VnSuGhtK-ycbymvrVC3s9cBzKZFoxwMsVu_c9JU1lRj8kpFXCwBQddzAN51sT7SMWKdgtO2BduMINIp-1vPAPec_5iXfmaRtVQMcG5m2GsFwUbJwnOGVBEaoal7Q_6GjzRfJnHkeyiKa6ElUSP_POZP4218CvHXu)](https://www.star-history.com/?repos=libukai%2Fawesome-agent-skills&type=date&legend=top-left)
+[![](../assets/media/20260805233809.png)](https://www.star-history.com/?repos=libukai%2Fawesome-agent-skills&type=date&legend=top-left)
