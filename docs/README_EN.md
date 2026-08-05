@@ -220,11 +220,8 @@ See the [GitHub announcement](https://github.blog/changelog/2026-04-16-manage-ag
 ### Programming & Development
 
 -   [superpowers](https://github.com/obra/superpowers): Complete programming project workflow
--   [frontend-design](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/frontend-design): Frontend design skills
+-   [frontend-design](https://github.com/anthropics/skills/tree/main/skills/frontend-design): Frontend design skills
 -   [ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill): More refined and personalized UI/UX design
--   [code-review](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/code-review): Code review skills
--   [code-simplifier](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/code-simplifier): Code simplification skills
--   [commit-commands](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/commit-commands): Git commit skills
 -   [archify](https://github.com/tt-a1i/archify): Verifiable, exportable architecture and workflow diagrams
 -   [text-to-cad](https://github.com/earthtojake/text-to-cad): CAD, CAE, and CAM agent skills
 -   [native-feel-skill](https://github.com/yetone/native-feel-skill): Native-feeling cross-platform desktop app guidance
@@ -287,11 +284,9 @@ Reference an existing command directly when it reliably handles a simple one-off
 
 See the official [Using scripts in skills](https://agentskills.io/skill-creation/using-scripts) guide.
 
-### Official Plugin
+### Official Skill
 
-Use the official [skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator) plugin to quickly create and iterate personal skills.
-
-![](../assets/media/skill-creator.png)
+Use Anthropic's maintained [skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator) to create, modify, evaluate, and iterate on Skills.
 
 ### Testing and Evaluation
 
@@ -304,33 +299,6 @@ Evaluate triggering separately from output quality. Test `description` against r
 - [microsoft/SkillOpt](https://github.com/microsoft/SkillOpt): trajectory- and validation-driven text optimization
 - [alibaba/skill-up](https://github.com/alibaba/skill-up): evaluation and evolution tooling
 - [rpamis/comet](https://github.com/rpamis/comet): turn ideas into evaluated agent workflows
-
-### Enhanced Plugin
-
-Building on the official skill-creator plugin, this project integrates best practices from Anthropic and Google teams to build a more powerful Agent Skills Toolkit to help you quickly create and improve Agent Skills. (**Note: This plugin currently only supports Claude Code**)
-
-#### Add Marketplace
-
-Launch Claude Code, enter the plugin marketplace, and add the `libukai/awesome-agent-skills` marketplace. You can also directly use the following command in the input box:
-
-```bash
-/plugin marketplace add libukai/awesome-agent-skills
-```
-
-#### Install Plugin
-
-After successfully installing the marketplace, select and install the `agent-skills-toolkit` plugin.
-
-![](../assets/media/skill-creator-pro.png)
-
-#### Quick Commands
-
-The plugin includes multiple quick commands covering the complete workflow from creation, improvement, testing to optimizing skill descriptions:
-
-- `/agent-skills-toolkit:skill-creator-pro` - Complete workflow (Enhanced)
-- `/agent-skills-toolkit:create-skill` - Create new skill
-- `/agent-skills-toolkit:improve-skill` - Improve existing skill
-- `/agent-skills-toolkit:test-skill` - Test and evaluate skill
 
 ## Acknowledgments
 

@@ -220,11 +220,8 @@ gh skill publish
 ### プログラミング開発
 
 -   [superpowers](https://github.com/obra/superpowers)：完全なプログラミングプロジェクトワークフローをカバー
--   [frontend-design](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/frontend-design)：フロントエンドデザインスキル
+-   [frontend-design](https://github.com/anthropics/skills/tree/main/skills/frontend-design)：フロントエンドデザインスキル
 -   [ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill)：より洗練されたパーソナライズされた UI/UX デザイン
--   [code-review](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/code-review)：コードレビュースキル
--   [code-simplifier](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/code-simplifier)：コード簡略化スキル
--   [commit-commands](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/commit-commands)：Git コミットスキル
 -   [archify](https://github.com/tt-a1i/archify)：検証・エクスポート可能なアーキテクチャ図とフロー図
 -   [text-to-cad](https://github.com/earthtojake/text-to-cad)：CAD、CAE、CAM 向け Agent Skills
 -   [native-feel-skill](https://github.com/yetone/native-feel-skill)：クロスプラットフォーム・デスクトップアプリのネイティブ体験設計
@@ -287,11 +284,9 @@ Skill は受動的な文書ではありません。description は発見に影�
 
 公式の [Using scripts in skills](https://agentskills.io/skill-creation/using-scripts) ガイドも参照してください。
 
-### 公式プラグイン
+### 公式 Skill
 
-公式の [skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator) プラグインを使用して、個人専用の skill を迅速に作成・反復できます。
-
-![](../assets/media/skill-creator.png)
+Anthropic が管理する [skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator) を使用して、Skill の作成、変更、評価、反復を行えます。
 
 ### テストと評価
 
@@ -304,33 +299,6 @@ Skill は受動的な文書ではありません。description は発見に影�
 - [microsoft/SkillOpt](https://github.com/microsoft/SkillOpt)：軌跡と検証セットに基づくテキスト最適化
 - [alibaba/skill-up](https://github.com/alibaba/skill-up)：評価と進化のツール
 - [rpamis/comet](https://github.com/rpamis/comet)：アイデアを評価済み Agent ワークフローへ反復
-
-### 強化プラグイン
-
-公式 skill-creator plugin をベースに、本プロジェクトは Anthropic と Google チームのベストプラクティスを統合し、Agent Skills を迅速に作成・改善するためのより強力な Agent Skills Toolkit を構築しました。（**注意：このプラグインは現在 Claude Code のみをサポートしています**）
-
-#### マーケットプレイスの追加
-
-Claude Code を起動し、プラグインマーケットプレイスに入り、`libukai/awesome-agent-skills` マーケットプレイスを追加します。入力ボックスで以下のコマンドを直接使用してマーケットプレイスを追加することもできます：
-
-```bash
-/plugin marketplace add libukai/awesome-agent-skills
-```
-
-#### プラグインのインストール
-
-マーケットプレイスのインストールに成功したら、`agent-skills-toolkit` プラグインを選択してインストールします。
-
-![](../assets/media/skill-creator-pro.png)
-
-#### クイックコマンド
-
-プラグインには複数のクイックコマンドが組み込まれており、作成、改善、テストからスキル説明の最適化まで、完全なワークフローをカバーしています：
-
-- `/agent-skills-toolkit:skill-creator-pro` - 完全なワークフロー（強化版）
-- `/agent-skills-toolkit:create-skill` - 新しい skill を作成
-- `/agent-skills-toolkit:improve-skill` - 既存の skill を改善
-- `/agent-skills-toolkit:test-skill` - skill をテストして評価
 
 ## 謝辞
 

@@ -232,11 +232,8 @@ gh skill publish                                 # 校验并发布技能
 ### 编程开发
 
 -   [superpowers](https://github.com/obra/superpowers)：涵盖完整编程项目工作流程
--   [frontend-design](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/frontend-design)：前端设计技能
+-   [frontend-design](https://github.com/anthropics/skills/tree/main/skills/frontend-design)：前端设计技能
 -   [ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill)：更精致和个性化的 UI/UX 设计
--   [code-review](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/code-review)：代码审查技能
--   [code-simplifier](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/code-simplifier)：代码简化技能
--   [commit-commands](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/commit-commands)：Git 提交技能
 -   [archify](https://github.com/tt-a1i/archify)：生成可验证、可导出的架构图与流程图
 -   [text-to-cad](https://github.com/earthtojake/text-to-cad)：面向 CAD、CAE 与 CAM 的工程技能库
 -   [native-feel-skill](https://github.com/yetone/native-feel-skill)：跨平台桌面应用的原生体验设计指南
@@ -301,11 +298,9 @@ Skill 不只是文档：它的描述会影响检索和选择，正文会改变 A
 
 详见官方的 [Using scripts in skills](https://agentskills.io/skill-creation/using-scripts) 指南。
 
-### 官方插件
+### 官方 Skill
 
-通过官方出品的 [skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator) 插件可快速创建和迭代个人专属的 skill。
-
-![](assets/media/skill-creator.png)
+可使用 Anthropic 维护的 [skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator) 创建、修改、评测和迭代 Skill。
 
 ### 测试与评测
 
@@ -320,33 +315,6 @@ Skill 不只是文档：它的描述会影响检索和选择，正文会改变 A
 - [rpamis/comet](https://github.com/rpamis/comet)：把想法迭代为经过评测的 Agent 工作流
 
 现有研究的共同结论是：聚焦单一任务、带明确验收标准和持续回归的 Skill，通常比大而全的知识包更可靠；过时或不匹配的 Skill 可能增加成本甚至降低成功率。
-
-### 增强插件
-
-在官方 skill-creator plugin 的基础上，本项目整合来自 Anthropic 和 Google 团队的最佳实践，构建了一个更为强大的 Agent Skills Toolkit，帮助你快速创建和改进 Agent Skills。（**注意：该插件目前仅支持 Claude Code**）
-
-#### 添加市场
-
-启动 Claude Code，进入插件市场，添加 `libukai/awesome-agent-skills` 市场，也可以直接在输入框中使用以下指令添加市场：
-
-```bash
-/plugin marketplace add libukai/awesome-agent-skills
-```
-
-#### 安装插件
-
-成功安装市场之后，选择安装 `agent-skills-toolkit` 插件
-
-![](assets/media/skill-creator-pro.png)
-
-#### 快捷指令
-
-插件中置入了多个快捷指令，覆盖了从创建、改进、测试到优化技能描述的完整工作流程：
-
-- `/agent-skills-toolkit:skill-creator-pro` - 完整工作流程
-- `/agent-skills-toolkit:create-skill` - 创建新 skill
-- `/agent-skills-toolkit:improve-skill` - 改进现有 skill
-- `/agent-skills-toolkit:test-skill` - 测试评估 skill
 
 ## 致谢
 
