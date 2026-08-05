@@ -1,7 +1,7 @@
 <div>
   <p align="center">
     <a href="https://platform.composio.dev/?utm_source=Github&utm_medium=Youtube&utm_campaign=2025-11&utm_content=AwesomeSkills">
-    <img width="1280" height="640" alt="Composio banner" src="../assets/media/awesome-agent-skills.png">
+    <img width="100%" alt="Composio banner" src="../assets/media/awesome-agent-skills.png">
     </a>
   </p>
 </div>
@@ -26,7 +26,7 @@
 
 </div>
 
-このプロジェクトは、少数精鋭の原則に従い、最高品質の Skill リソース、チュートリアル、ベストプラクティスの収集と共有を目的とし、より多くの人が Agent 構築の第一歩を簡単に踏み出せるよう支援します。
+このプロジェクトは少数精鋭の原則に従い、優れた Skill リソース、チュートリアル、実践例を収集・共有することで、より多くの人がパーソナライズされた Agent 構築の第一歩を踏み出せるよう支援します。
 
 > 𝕏 アカウント [@libukai](https://x.com/libukai) および 💬 WeChat 公式アカウント [@李不凯正在研究](https://mp.weixin.qq.com/s/uer7HvD2Z9ZbJSPEZWHKRA?scene=0&subscene=90) をフォローして、Skills の最新リソースと実用的なチュートリアルをいち早く入手してください!
 
@@ -34,9 +34,13 @@
 
 Skill は軽量な汎用標準で、ワークフローと専門知識をパッケージ化することで、AI が特定のタスクを実行する能力を強化します。
 
-反復可能なタスクを実行する必要がある時、毎回の AI との会話で関連情報を繰り返し提供する必要はありません。対応する Skill をインストールするだけで、AI は関連スキルを習得できます。
+繰り返し発生するタスクでは、会話のたびに同じ背景情報を入力する必要はありません。対応する Skill をインストールすれば、Agent はその領域に必要な能力を利用できます。
 
-半年間の開発と反復を経て、Skill は Agent フレームワークにおいてパーソナライズされた AI 能力を強化する標準ソリューションとなり、様々な AI 製品に広くサポートされています。
+約1年にわたる進化を経て、Skill は AI に領域固有の能力を追加する標準的な手段となり、主要な Agent Harness フレームワークや AI 製品で広くサポートされています。
+
+## サポート状況
+
+Skill のオープン仕様は、Claude Code、ChatGPT と Codex、GitHub Copilot、Cursor、Gemini CLI、VS Code、OpenCode、Kiro、JetBrains Junie など、多数のホストに採用されています。検索パスや実験的フィールドの対応状況はホストごとに異なるため、最新情報は [Agent Skills Client Showcase](https://agentskills.io/clients) と各製品のドキュメントを確認してください。
 
 ## 標準構造
 
@@ -44,21 +48,35 @@ Agent Skills は Anthropic が開始し、コミュニティと共同で管理�
 
 ```markdown
 my-skill/
-├── SKILL.md          # 必須：説明とメタデータ
+├── SKILL.md          # 必須：メタデータ + 使用手順
 ├── scripts/          # オプション：実行可能コード
-├── references/       # オプション：ドキュメント参考資料
-└── assets/           # オプション：テンプレート、リソース
+├── references/       # オプション：参考資料とドキュメント
+├── assets/           # オプション：テンプレート、リソース
+└── ...               # その他のファイルやディレクトリ
 ```
 
-`SKILL.md` の frontmatter には `name` と `description` が必須です。`license`、`compatibility`、`metadata`、実験的な `allowed-tools` も使用できます。`name` は64文字以内の小文字、数字、ハイフンで構成し、親ディレクトリ名と一致させます。`description` は1024文字以内で、Skill が「何をするか」と「いつ使うか」の両方を記述します。本文は500行、5000 tokens 未満を目安とし、詳細は用途ごとに分けたリソースファイルへ移します。
+最小構成の Skill に必要なファイルは `SKILL.md` だけです。
 
-`skills-ref validate ./my-skill` で検証できます。Agent はまず全 Skill の `name` と `description` だけを読み取って発見し、タスクが一致した時に完全な `SKILL.md` を有効化し、実行中に必要な scripts、references、assets だけを読み込みます。この段階的開示により、すべての指示を先にロードせず、多数の Skill を利用できます。
+`SKILL.md` の YAML frontmatter には `name` と `description` が必須です。`license`、`compatibility`、`metadata`、実験的な `allowed-tools` も宣言できます。
+
+`name` は64文字以内の小文字、数字、ハイフンで構成し、親ディレクトリ名と一致させます。`description` は1024文字以内で、Skill が「何をするか」と「いつ使うか」の両方を記述します。本文は500行、5000 tokens 未満を目安とし、詳細は用途ごとに分けたリソースファイルへ移します。
+
+`SKILL.md` に加えて、必要に応じて次のファイルやディレクトリを含められます：
+
+- `scripts/`：データ処理、形式変換、結果検証など、反復的、複雑、または決定的な結果を必要とする処理を実行可能コードとして保存します。
+- `references/`：領域知識、技術文書、例、データ形式の説明など、特定のタスクでのみ Agent が読む補足資料を保存します。
+- `assets/`：文書テンプレート、設定テンプレート、画像、参照表、Schema など、実行時または成果物で使用する静的リソースを保存します。
+- その他のファイル：ライセンス、利用者向けドキュメント、タスクの完了に必要なその他のファイルやディレクトリも追加できます。
+
+これらはすべてオプションです。`SKILL.md` から Skill ルートへの相対パスで参照し、Agent がいつ読み取り、または実行するかを明記します。
+
+Agent は通常、3段階で Skill をロードします。起動時には発見のために各 Skill の `name` と `description` だけを読み、タスクが一致すると完全な `SKILL.md` を有効化してロードし、実行中は必要な `scripts/`、`references/`、`assets/` だけを読み込みます。この段階的開示により、コンテキストを過度に消費せず、多数の Skill を利用できます。
 
 ## スキルのインストール
 
-Skill は Claude や ChatGPT のアプリ、Cursor や Claude Code などの IDE や TUI コーディングツール、その他の互換性のある Agent Harness で使用できます。
+Skill は Claude や ChatGPT などの GUI App のほか、Cursor などの IDE や Claude Code などの TUI CLI でも使用できます。
 
-Skill をインストールする本質は、Skill のフォルダを特定のディレクトリに配置することで、AI が必要に応じてロードして使用できるようにすることです。
+Skill のインストールとは、Agent が必要に応じてロードして使用できるよう、対応するフォルダを所定のディレクトリに配置することです。
 
 ### 共通ディレクトリ規約
 
@@ -69,25 +87,27 @@ Skill をインストールする本質は、Skill のフォルダを特定の�
 ~/.agents/skills/<skill-name>/
 ```
 
-同名の Skill は通常、プロジェクトレベルがユーザーレベルより優先されます。クライアント固有のディレクトリも検索される場合があるため、正確なパスは各製品のドキュメントを確認してください。プロジェクト Skill はリポジトリと一緒に取得されるため、未知のリポジトリでは信頼する前に出所と内容を確認します。詳細は公式の[クライアント実装ガイド](https://agentskills.io/client-implementation/adding-skills-support)を参照してください。
+同名の Skill は通常、プロジェクトレベルがユーザーレベルより優先されます。クライアント固有のディレクトリも検索される場合があるため、正確なパスは各製品のドキュメントを確認してください。プロジェクト Skill はリポジトリと一緒に取得されるため、未知のリポジトリから Skill をロードする前に出所と内容を確認します。
 
-### Claude App エコシステム
+### App でインストール
 
-![](../assets/media/claude_app.png)
+![](../assets/media/workbuddy.png)
 
 現在、App で Skill を使用する主な方法は2つあります：App 内蔵の Skill ストアからインストールするか、zip ファイルをアップロードしてインストールする方法です。
 
+一部の App には Skill ストアや管理画面が組み込まれており、インストールと管理を手軽に行えます。
+
 公式ストアにない Skill については、以下で推奨するサードパーティ Skill ストアからダウンロードして手動でインストールできます。
 
-### Claude Code エコシステム
+### CLI でインストール
 
 ![](../assets/media/skills_mp.png)
 
-[skillsmp](https://skillsmp.com/zh) マーケットプレイスの使用を推奨します。このマーケットプレイスは GitHub 上のすべての Skill プロジェクトを自動的にインデックス化し、カテゴリ、更新時間、スター数などのタグで整理しています。
+[skillsmp](https://skillsmp.com/zh) マーケットプレイスを使うと、GitHub 上の Skill プロジェクトを発見し、カテゴリ、更新時間、スター数などで絞り込めます。
 
 また、Vercel の [skills.sh](https://skills.sh/) ランキングボードを補助的に使用できます。最も人気のある Skills リポジトリと個別 Skill の使用状況を直感的に確認できます。
 
-特定の skill については、`npx skills` コマンドラインツールを使用して迅速に発見、追加、管理できます。詳細なパラメータについては [vercel-labs/skills](https://github.com/vercel-labs/skills) を参照してください。
+特定の Skill については、`npx skills` コマンドラインツールを使用して迅速に発見、追加、管理できます。詳細なパラメータについては [vercel-labs/skills](https://github.com/vercel-labs/skills) を参照してください。
 
 ```bash
 npx skills find [query]                          # 関連スキルを検索
@@ -100,18 +120,20 @@ npx skills remove [skill-name]                   # スキルをアンインス�
 npx skills init [skill-name]                     # スキルテンプレートを作成
 ```
 
-現在の CLI は 70 種類以上の Agent をサポートします。バージョン固定と来歴管理には、GitHub CLI 2.90.0+ の public preview `gh skill` も利用できます：
+現在の `skills` CLI は70種類以上の Agent をサポートし、project/global スコープ、対象 Agent、コピーまたはシンボリックリンクによるインストールを指定できます。最新のパラメータは [vercel-labs/skills](https://github.com/vercel-labs/skills) を参照してください。
+
+バージョン固定とサプライチェーンの追跡可能性を重視する場合は、GitHub CLI 2.90.0 以降で提供される public preview の `gh skill` を利用できます：
 
 ```bash
-gh skill search <query>
-gh skill preview <owner/repo> <skill>
-gh skill install <owner/repo> <skill>@<tag>
-gh skill install <owner/repo> <skill> --pin <sha>
-gh skill update --all
-gh skill publish
+gh skill search <query>                          # Skill を検索
+gh skill preview <owner/repo> <skill>            # インストール前に内容を確認
+gh skill install <owner/repo> <skill>@<tag>      # tag を指定してインストール
+gh skill install <owner/repo> <skill> --pin <sha> # commit に固定
+gh skill update --all                            # 更新を確認して適用
+gh skill publish                                 # Skill を検証して公開
 ```
 
-詳細は [GitHub の発表](https://github.blog/changelog/2026-04-16-manage-agent-skills-with-github-cli/) と [Agent Skills Client Showcase](https://agentskills.io/clients) を参照してください。
+`gh skill` はリポジトリ、ref、Git tree SHA を記録し、変更不可の Release、secret scanning、code scanning と組み合わせて利用できます。詳細は [GitHub の発表](https://github.blog/changelog/2026-04-16-manage-agent-skills-with-github-cli/) を参照してください。
 
 ## 優質チュートリアル
 
@@ -284,15 +306,11 @@ Skill は受動的な文書ではありません。description は発見に影�
 
 公式の [Using scripts in skills](https://agentskills.io/skill-creation/using-scripts) ガイドも参照してください。
 
-### 公式 Skill
-
-Anthropic が管理する [skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator) を使用して、Skill の作成、変更、評価、反復を行えます。
-
 ### テストと評価
 
-一度のデモ成功だけでは Skill の効果を証明できません。まず `evals/evals.json` に2～3件の現実的なテストを保存し、各 `prompt`、`expected_output`、任意の入力ファイル、検証可能な `assertions` を記録します。その後、クリーンなコンテキストで with-skill / without-skill、または新旧バージョンを実行し、成功率、token、所要時間、ツール呼び出し、各 PASS/FAIL の具体的根拠を比較します。
+Skill の評価は2つの観点に分けられます。**`description` 評価**では、使うべき場面で Agent が正しく Skill を起動し、使うべきでない場面では誤起動を避けられるかを確認します。**Skill 効果評価**では、ロード後にタスクの品質、安定性、効率が実際に向上するかを確認します。前者は「適切な Skill を見つけられるか」、後者は「見つけた Skill が本当に役立つか」を問うものです。明確な成功基準を持つ現実的なタスクで継続的に回帰テストし、Skill を使わない場合や旧バージョンと結果を比較します。
 
-起動評価は出力品質と分けて行います。`description` に対し、異なる表現、複雑さ、暗黙の意図を含む should-trigger と近似した should-not-trigger の現実的な要求を用意し、検証セットを保持してキーワードへの過学習を防ぎます。公式の[品質評価](https://agentskills.io/skill-creation/evaluating-skills)と[description 最適化](https://agentskills.io/skill-creation/optimizing-descriptions)も参照してください。
+完全な手順は、公式の[品質評価](https://agentskills.io/skill-creation/evaluating-skills)と[description 最適化](https://agentskills.io/skill-creation/optimizing-descriptions)を参照してください。
 
 - [SkillsBench](https://www.skillsbench.ai/)：クロスドメイン評価ベンチマークとランキング
 - [microsoft/waza](https://github.com/microsoft/waza)：Skill の作成、テスト、計測、改善
@@ -300,10 +318,18 @@ Anthropic が管理する [skill-creator](https://github.com/anthropics/skills/t
 - [alibaba/skill-up](https://github.com/alibaba/skill-up)：評価と進化のツール
 - [rpamis/comet](https://github.com/rpamis/comet)：アイデアを評価済み Agent ワークフローへ反復
 
+既存研究が示す共通の結論は、明確な受け入れ基準と継続的な回帰テストを備えた、単一タスクに集中する Skill のほうが、範囲の広すぎる知識パッケージより一般に信頼できるということです。古い、またはタスクに適合しない Skill は、コストを増やし、成功率を下げる可能性があります。
+
 ## 謝辞
 
 ![](../assets/media/talk_is_cheap.jpg)
 
 ## プロジェクト履歴
 
-[![Star History Chart](https://api.star-history.com/svg?repos=libukai/awesome-agent-skills&type=date&legend=top-left)](https://www.star-history.com/#libukai/awesome-agent-skills&type=date&legend=top-left)
+<a href="https://www.star-history.com/?repos=libukai%2Fawesome-agent-skills&type=date&legend=top-left">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=libukai/awesome-agent-skills&type=date&theme=dark&legend=top-left&sealed_token=PhW8X-REjk59vBOC2czHnUF4vT5jwv3jBBwr6Xun6lqawQkpowogAieIi6bieC4hYsfrxetUlskV1Gpuw5kTTABiSE7gpepR43rQ9uOOUrGBmH22wxmiEgMwmMdkm49YHSJIMscG7Jrr9LrJv2UPM6FNeKA8Gcel1mNWZuIJyBPnyY5P7Th7lg9mJkr_" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=libukai/awesome-agent-skills&type=date&legend=top-left&sealed_token=PhW8X-REjk59vBOC2czHnUF4vT5jwv3jBBwr6Xun6lqawQkpowogAieIi6bieC4hYsfrxetUlskV1Gpuw5kTTABiSE7gpepR43rQ9uOOUrGBmH22wxmiEgMwmMdkm49YHSJIMscG7Jrr9LrJv2UPM6FNeKA8Gcel1mNWZuIJyBPnyY5P7Th7lg9mJkr_" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=libukai/awesome-agent-skills&type=date&legend=top-left&sealed_token=PhW8X-REjk59vBOC2czHnUF4vT5jwv3jBBwr6Xun6lqawQkpowogAieIi6bieC4hYsfrxetUlskV1Gpuw5kTTABiSE7gpepR43rQ9uOOUrGBmH22wxmiEgMwmMdkm49YHSJIMscG7Jrr9LrJv2UPM6FNeKA8Gcel1mNWZuIJyBPnyY5P7Th7lg9mJkr_" />
+ </picture>
+</a>

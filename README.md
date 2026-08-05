@@ -1,7 +1,7 @@
 <div>
   <p align="center">
     <a href="https://platform.composio.dev/?utm_source=Github&utm_medium=Youtube&utm_campaign=2025-11&utm_content=AwesomeSkills">
-    <img width="1280" height="640" alt="Composio banner" src="assets/media/awesome-agent-skills.png">
+    <img width="100%" alt="Composio banner" src="assets/media/awesome-agent-skills.png">
     </a>
   </p>
 </div>
@@ -26,9 +26,9 @@
 
 </div>
 
-本项目致力于遵循少而精的原则，收集和分享最优质的 Skill 资源、教程和实践案例，帮助更多人轻松迈出搭建 Agent 的第一步。
+本项目致力于遵循少而精的原则，收集和分享最优质的 Skill 资源、教程和实践案例，帮助更多人轻松迈出构建个性化 Agent 的第一步。
 
-> 如果觉得这个项目对你有所帮助，还请帮忙点个 🌟 让更多人知晓。同时，也欢迎关注我的 𝕏 账号 [@李不凯正在研究](https://x.com/libukai) ，即时获取 Agent Skill 的最新资源和实战教程！
+> 如果觉得这个项目对你有所帮助，还请帮忙点个 🌟 让更多人知晓。同时，也欢迎关注我的 𝕏 账号 [@李不凯正在研究](https://x.com/libukai) ，获取有关 Agent Skill 的最新资源和实战教程！
 
 ## 快速入门
 
@@ -36,9 +36,14 @@ Skill 是一种轻量级的 Agent 构建方案，通过封装特定的业务流�
 
 ![](assets/media/model-harness-skill.png)
 
-面对重复性的任务需求，你无需在每次对话中反复输入背景信息。只需安装对应的 Skill，AI 即可习得该领域的专业技能。
+面对重复性的任务需求，你无需在每次对话中反复输入背景信息。只需安装对应的 Skill，Agent 即可习得该领域的专业技能。
 
-历经半年的迭代演进，Skill 已成为增强 AI 垂直领域能力的标准方案，并获得了各类 Agent 框架与 AI 产品的广泛支持。
+历经接近一年的迭代演进，Skill 已成为增强 AI 垂直领域能力的标准方案，获得了主流 Harness 框架与 AI 产品的广泛支持。
+
+
+## 支持状况
+
+Skill 开放规范已经被 Claude Code、ChatGPT 与 Codex、GitHub Copilot、Cursor、Gemini CLI、VS Code、OpenCode、Kiro、JetBrains Junie 等大量宿主采用。不同宿主的搜索路径和实验字段支持度可能不同，请以 [Agent Skills Client Showcase](https://agentskills.io/clients) 和对应产品文档为准。
 
 ## 标准结构
 
@@ -46,24 +51,35 @@ Agent Skills 是由 Anthropic 发起、社区共同维护的[开放规范](https
 
 ```markdown
 my-skill/
-├── SKILL.md          # 必需：流程说明和元数据
-├── references/       # 可选：参考资料
-├── scripts/          # 可选：可执行脚本
+├── SKILL.md          # 必需：元数据 + 使用说明
+├── scripts/          # 可选：可执行代码
+├── references/       # 可选：参考资料和文档
 ├── assets/           # 可选：模板、资源
 └── ...               # 其他附加文件或者文件夹
 ```
+
+一个最精简的 Skill 中，至少需要包含 `SKILL.md` 这个文件。
 
 `SKILL.md` 的 YAML frontmatter 必须包含 `name` 和 `description`，还可声明 `license`、`compatibility`、`metadata`，以及实验性的 `allowed-tools`。
 
 `name` 最长 64 个字符，只能使用小写字母、数字和连字符，且必须与父目录一致；`description` 最长 1024 个字符，需要同时说明“做什么”和“何时使用”。正文建议少于 500 行、5000 tokens，详细内容应拆到独立资源文件中。
 
+除 `SKILL.md` 外，还可以按需加入以下文件或目录：
+
+- `scripts/`：存放可直接执行的代码，适合固化重复、复杂或需要确定性结果的操作，例如数据处理、格式转换和结果校验。
+- `references/`：存放 Agent 仅在特定任务中才需要阅读的补充资料，例如领域知识、技术文档、示例和数据格式说明。
+- `assets/`：存放执行或产出时使用的静态资源，例如文档模板、配置模板、图片、查找表和 Schema。
+- 其他文件：也可以加入许可证、面向使用者的说明文档，或完成任务所需的其他文件和目录。
+
+这些内容都是可选的。应在 `SKILL.md` 中使用相对于 Skill 根目录的路径引用它们，并明确 Agent 在什么情况下需要读取或执行。
+
 Agent 通常分三个阶段加载 Skill：启动时只读取所有 Skill 的 `name` 和 `description` 用于发现；任务匹配后再激活并加载完整 `SKILL.md`；执行过程中仅按需读取 `scripts/`、`references/` 和 `assets/`。这也是渐进式披露能够同时维持大量 Skill、又不过度占用上下文的原因。
 
 ## 安装技能
 
-Skill 可以在 Claude 和 ChatGPT 这类 GUI App 中使用，也可以在 Cursor、Claude Code 等 IDE、TUI CLI 与其他兼容的 Agent Harness 中使用。
+Skill 可以在 Claude 和 ChatGPT 这类 GUI App 中使用，也可以在 Cursor 这类 IDE、Claude Code 这类 TUI CLI 中使用。
 
-安装 Skill 过程的本质，其实就是将 Skill 对应的文件夹放到特定的目录下，以便 AI 能按需加载和使用。
+安装 Skill 过程的本质，其实就是将 Skill 对应的文件夹放到特定的目录下，以便 Agent 能按需加载和使用。
 
 ### 通用目录约定
 
@@ -74,25 +90,27 @@ Skill 可以在 Claude 和 ChatGPT 这类 GUI App 中使用，也可以在 Curso
 ~/.agents/skills/<skill-name>/
 ```
 
-同名 Skill 通常由项目级覆盖用户级；不同客户端还可能扫描自己的原生目录。具体路径应以对应产品文档为准。项目级 Skill 会随仓库进入工作区，因此加载陌生仓库中的 Skill 前仍需检查来源和内容。详见[官方客户端接入指南](https://agentskills.io/client-implementation/adding-skills-support)。
+同名 Skill 通常由项目级覆盖用户级；不同客户端还可能扫描自己的原生目录。具体路径应以对应产品文档为准。项目级 Skill 会随仓库进入工作区，因此加载陌生仓库中的 Skill 前仍需检查来源和内容。
 
-### 类 Claude App 生态
+### 在 App 中安装
 
-![](assets/media/claude_app.png)
+![](assets/media/workbuddy.png)
 
 目前在 App 中使用 Skill 的方式主要有两种：通过 App 自带的 Skill 商店安装，或者通过上传压缩包的方式安装。
 
+部分 App 已内置 Skill 商店或管理入口，可以便捷地完成安装和管理。
+
 对于官方商店中没有的 Skill，可以从下方推荐的 Skill 第三方商店中下载并手动上传安装。
 
-### 类 Claude Code 生态
+### 在 CLI 中安装
 
 ![](assets/media/skills_mp.png)
 
-推荐使用 [skillsmp](https://skillsmp.com/zh) 商店发现 Github 上的 Skill 项目，并按照分类、更新时间、星标数量等标签筛选。
+推荐使用 [skillsmp](https://skillsmp.com/zh) 商店发现 GitHub 上的 Skill 项目，并按照分类、更新时间、星标数量等标签筛选。
 
 可辅助使用 Vercel 出品的 [skills.sh](https://skills.sh/) 排行榜，直观查看当前最受欢迎的 Skills 仓库和单个 Skill 的使用情况。
 
-对于特定的 skill，使用 `npx skills` 命令行工具可快速发现、添加和管理 skill，具体参数详见 [vercel-labs/skills](https://github.com/vercel-labs/skills)。
+对于特定的 Skill，使用 `npx skills` 命令行工具可快速发现、添加和管理 Skill，具体参数详见 [vercel-labs/skills](https://github.com/vercel-labs/skills)。
 
 ```bash
 npx skills find [query]                          # 搜索相关技能
@@ -121,10 +139,6 @@ gh skill publish                                 # 校验并发布技能
 ```
 
 `gh skill` 会记录仓库、ref 和 git tree SHA，可配合不可变 Release、secret scanning 和 code scanning 使用。详见 [GitHub 官方发布说明](https://github.blog/changelog/2026-04-16-manage-agent-skills-with-github-cli/)。
-
-#### 支持的 Agent
-
-开放规范已经被 Claude Code、ChatGPT 与 Codex、GitHub Copilot、Cursor、Gemini CLI、VS Code、OpenCode、Kiro、JetBrains Junie 等大量宿主采用。不同宿主的搜索路径和实验字段支持度可能不同，请以 [Agent Skills Client Showcase](https://agentskills.io/clients) 和对应产品文档为准。
 
 ## 优质教程
 
@@ -298,15 +312,11 @@ Skill 不只是文档：它的描述会影响检索和选择，正文会改变 A
 
 详见官方的 [Using scripts in skills](https://agentskills.io/skill-creation/using-scripts) 指南。
 
-### 官方 Skill
-
-可使用 Anthropic 维护的 [skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator) 创建、修改、评测和迭代 Skill。
-
 ### 测试与评测
 
-一个 Skill 能被加载或完成一次演示，不代表它真正提升了 Agent。建议先在 `evals/evals.json` 中保存 2～3 个真实测试任务，为每个任务记录 `prompt`、`expected_output`、可选输入文件和可验证的 `assertions`；随后在干净上下文中分别执行 with-skill / without-skill（或新旧版本）评测，记录成功率、token、耗时、工具调用以及支持 PASS/FAIL 的具体证据。
+Skill 评估可以分为两个维度：**`description` 评估**检查 Agent 在应该使用时能否正确触发、不该使用时能否避免误触发；**Skill 效果评估**检查加载后是否真正提升任务的质量、稳定性或效率。前者回答“能不能找对”，后者回答“找到后有没有用”。建议使用一组带有明确成功标准的真实任务持续回归，并与不使用 Skill 或旧版本的结果进行对比。
 
-触发评测应独立检查 `description`：同时准备应该触发和不应触发的近似真实请求，覆盖不同措辞、复杂度和隐式意图，并保留验证集防止针对固定关键词过拟合。完整流程可参考官方的[质量评测](https://agentskills.io/skill-creation/evaluating-skills)与[描述优化](https://agentskills.io/skill-creation/optimizing-descriptions)指南。
+完整流程可参考官方的[质量评测](https://agentskills.io/skill-creation/evaluating-skills)与[描述优化](https://agentskills.io/skill-creation/optimizing-descriptions)指南。
 
 - [SkillsBench](https://www.skillsbench.ai/)：跨领域评测 Skill 实际增益的基准与排行榜
 - [microsoft/waza](https://github.com/microsoft/waza)：创建、测试、度量和改进 Agent Skills
@@ -322,4 +332,10 @@ Skill 不只是文档：它的描述会影响检索和选择，正文会改变 A
 
 ## 项目历史
 
-[![Star History Chart](https://api.star-history.com/svg?repos=libukai/awesome-agent-skills&type=date&legend=top-left)](https://www.star-history.com/#libukai/awesome-agent-skills&type=date&legend=top-left)
+<a href="https://www.star-history.com/?repos=libukai%2Fawesome-agent-skills&type=date&legend=top-left">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=libukai/awesome-agent-skills&type=date&theme=dark&legend=top-left&sealed_token=PhW8X-REjk59vBOC2czHnUF4vT5jwv3jBBwr6Xun6lqawQkpowogAieIi6bieC4hYsfrxetUlskV1Gpuw5kTTABiSE7gpepR43rQ9uOOUrGBmH22wxmiEgMwmMdkm49YHSJIMscG7Jrr9LrJv2UPM6FNeKA8Gcel1mNWZuIJyBPnyY5P7Th7lg9mJkr_" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=libukai/awesome-agent-skills&type=date&legend=top-left&sealed_token=PhW8X-REjk59vBOC2czHnUF4vT5jwv3jBBwr6Xun6lqawQkpowogAieIi6bieC4hYsfrxetUlskV1Gpuw5kTTABiSE7gpepR43rQ9uOOUrGBmH22wxmiEgMwmMdkm49YHSJIMscG7Jrr9LrJv2UPM6FNeKA8Gcel1mNWZuIJyBPnyY5P7Th7lg9mJkr_" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=libukai/awesome-agent-skills&type=date&legend=top-left&sealed_token=PhW8X-REjk59vBOC2czHnUF4vT5jwv3jBBwr6Xun6lqawQkpowogAieIi6bieC4hYsfrxetUlskV1Gpuw5kTTABiSE7gpepR43rQ9uOOUrGBmH22wxmiEgMwmMdkm49YHSJIMscG7Jrr9LrJv2UPM6FNeKA8Gcel1mNWZuIJyBPnyY5P7Th7lg9mJkr_" />
+ </picture>
+</a>
