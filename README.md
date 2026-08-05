@@ -332,4 +332,10 @@ Skill 评估可以分为两个维度：**`description` 评估**检查 Agent 在�
 
 ## 项目历史
 
-[![Star History Chart](https://api.star-history.com/svg?repos=libukai/awesome-agent-skills&type=date&legend=top-left)](https://www.star-history.com/#libukai/awesome-agent-skills&type=date&legend=top-left)
+<a href="https://www.star-history.com/?repos=libukai%2Fawesome-agent-skills&type=date&legend=top-left">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=libukai/awesome-agent-skills&type=date&theme=dark&legend=top-left&sealed_token=PhW8X-REjk59vBOC2czHnUF4vT5jwv3jBBwr6Xun6lqawQkpowogAieIi6bieC4hYsfrxetUlskV1Gpuw5kTTABiSE7gpepR43rQ9uOOUrGBmH22wxmiEgMwmMdkm49YHSJIMscG7Jrr9LrJv2UPM6FNeKA8Gcel1mNWZuIJyBPnyY5P7Th7lg9mJkr_" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=libukai/awesome-agent-skills&type=date&legend=top-left&sealed_token=PhW8X-REjk59vBOC2czHnUF4vT5jwv3jBBwr6Xun6lqawQkpowogAieIi6bieC4hYsfrxetUlskV1Gpuw5kTTABiSE7gpepR43rQ9uOOUrGBmH22wxmiEgMwmMdkm49YHSJIMscG7Jrr9LrJv2UPM6FNeKA8Gcel1mNWZuIJyBPnyY5P7Th7lg9mJkr_" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=libukai/awesome-agent-skills&type=date&legend=top-left&sealed_token=PhW8X-REjk59vBOC2czHnUF4vT5jwv3jBBwr6Xun6lqawQkpowogAieIi6bieC4hYsfrxetUlskV1Gpuw5kTTABiSE7gpepR43rQ9uOOUrGBmH22wxmiEgMwmMdkm49YHSJIMscG7Jrr9LrJv2UPM6FNeKA8Gcel1mNWZuIJyBPnyY5P7Th7lg9mJkr_" />
+ </picture>
+</a>
