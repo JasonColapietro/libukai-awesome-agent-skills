@@ -326,10 +326,4 @@ Existing research points to the same conclusion: a focused Skill with explicit a
 
 ## Project History
 
-<a href="https://www.star-history.com/?repos=libukai%2Fawesome-agent-skills&type=date&legend=top-left">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=libukai/awesome-agent-skills&type=date&theme=dark&legend=top-left&sealed_token=PhW8X-REjk59vBOC2czHnUF4vT5jwv3jBBwr6Xun6lqawQkpowogAieIi6bieC4hYsfrxetUlskV1Gpuw5kTTABiSE7gpepR43rQ9uOOUrGBmH22wxmiEgMwmMdkm49YHSJIMscG7Jrr9LrJv2UPM6FNeKA8Gcel1mNWZuIJyBPnyY5P7Th7lg9mJkr_" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=libukai/awesome-agent-skills&type=date&legend=top-left&sealed_token=PhW8X-REjk59vBOC2czHnUF4vT5jwv3jBBwr6Xun6lqawQkpowogAieIi6bieC4hYsfrxetUlskV1Gpuw5kTTABiSE7gpepR43rQ9uOOUrGBmH22wxmiEgMwmMdkm49YHSJIMscG7Jrr9LrJv2UPM6FNeKA8Gcel1mNWZuIJyBPnyY5P7Th7lg9mJkr_" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=libukai/awesome-agent-skills&type=date&legend=top-left&sealed_token=PhW8X-REjk59vBOC2czHnUF4vT5jwv3jBBwr6Xun6lqawQkpowogAieIi6bieC4hYsfrxetUlskV1Gpuw5kTTABiSE7gpepR43rQ9uOOUrGBmH22wxmiEgMwmMdkm49YHSJIMscG7Jrr9LrJv2UPM6FNeKA8Gcel1mNWZuIJyBPnyY5P7Th7lg9mJkr_" />
- </picture>
-</a>
+[![Star History Chart](https://api.star-history.com/chart?repos=libukai/awesome-agent-skills&type=date&legend=top-left&sealed_token=tZ9Tp9xJWV8VDkQV5ASKbgCgErB-VnSuGhtK-ycbymvrVC3s9cBzKZFoxwMsVu_c9JU1lRj8kpFXCwBQddzAN51sT7SMWKdgtO2BduMINIp-1vPAPec_5iXfmaRtVQMcG5m2GsFwUbJwnOGVBEaoal7Q_6GjzRfJnHkeyiKa6ElUSP_POZP4218CvHXu)](https://www.star-history.com/?repos=libukai%2Fawesome-agent-skills&type=date&legend=top-left)
