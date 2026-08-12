@@ -1,7 +1,7 @@
 <div>
   <p align="center">
     <a href="https://platform.composio.dev/?utm_source=Github&utm_medium=Youtube&utm_campaign=2025-11&utm_content=AwesomeSkills">
-    <img width="1280" height="640" alt="Composio banner" src="../assets/media/awesome-agent-skills.png">
+    <img width="100%" alt="Composio banner" src="../assets/media/awesome-agent-skills.png">
     </a>
   </p>
 </div>
@@ -26,7 +26,7 @@ English | [日本語](README_JA.md) | [简体中文](../README.md)
 
 </div>
 
-This project is dedicated to following the principle of quality over quantity, collecting and sharing the finest Skill resources, tutorials, and best practices, helping more people easily take their first step in building Agents.
+This project follows the principle of quality over quantity, collecting and sharing the best Skill resources, tutorials, and practices to help more people take their first step toward building a personalized Agent.
 
 > Follow me on 𝕏 [@libukai](https://x.com/libukai) and 💬 WeChat Official Account [@李不凯正在研究](https://mp.weixin.qq.com/s/uer7HvD2Z9ZbJSPEZWHKRA?scene=0&subscene=90) for the latest Skills resources and practical tutorials!
 
@@ -34,9 +34,13 @@ This project is dedicated to following the principle of quality over quantity, c
 
 Skill is a lightweight universal standard that packages workflows and professional knowledge to enhance AI's ability to perform specific tasks.
 
-When you need to execute repeatable tasks, you no longer need to repeatedly provide relevant information in every conversation with AI. Simply install the corresponding Skill, and AI will master the related capabilities.
+For recurring tasks, you no longer need to repeat the same background information in every conversation. Install the corresponding Skill, and the Agent can acquire the relevant capabilities.
 
-After half a year of development and iteration, Skill has become the standard solution for enhancing personalized AI capabilities in Agent frameworks, and has been widely supported by various AI products.
+After nearly a year of evolution, Skill has become a standard way to extend AI with domain-specific capabilities and is now supported by mainstream Agent Harness frameworks and AI products.
+
+## Support Status
+
+The open Skill specification has been adopted by many hosts, including Claude Code, ChatGPT and Codex, GitHub Copilot, Cursor, Gemini CLI, VS Code, OpenCode, Kiro, and JetBrains Junie. Search paths and support for experimental fields vary by host; consult the [Agent Skills Client Showcase](https://agentskills.io/clients) and each product's documentation for current details.
 
 ## Standard Structure
 
@@ -44,21 +48,35 @@ Agent Skills is an [open specification](https://agentskills.io/specification) in
 
 ```markdown
 my-skill/
-├── SKILL.md          # Required: description and metadata
+├── SKILL.md          # Required: metadata + instructions
 ├── scripts/          # Optional: executable code
-├── references/       # Optional: documentation references
-└── assets/           # Optional: templates, resources
+├── references/       # Optional: references and documentation
+├── assets/           # Optional: templates, resources
+└── ...               # Other files or directories
 ```
 
-The `SKILL.md` frontmatter requires `name` and `description`; optional fields include `license`, `compatibility`, `metadata`, and the experimental `allowed-tools`. `name` is limited to 64 characters, uses lowercase letters, numbers, and hyphens, and must match its parent directory. `description` is limited to 1,024 characters and should explain both what the skill does and when to use it. Keep the main file below 500 lines and 5,000 tokens, moving detail into focused resource files.
+A minimal Skill needs only a `SKILL.md` file.
 
-Validate a skill with `skills-ref validate ./my-skill`. Agents then load it in three stages: discover all skills from `name` and `description`, activate the full `SKILL.md` when a task matches, and read scripts, references, and assets only as execution requires them. This progressive disclosure keeps a large skill catalog available without loading every instruction up front.
+The YAML frontmatter in `SKILL.md` requires `name` and `description`; it may also declare `license`, `compatibility`, `metadata`, and the experimental `allowed-tools`.
+
+`name` is limited to 64 characters, uses lowercase letters, numbers, and hyphens, and must match its parent directory. `description` is limited to 1,024 characters and should explain both what the Skill does and when to use it. Keep the body below 500 lines and 5,000 tokens, moving details into focused resource files.
+
+In addition to `SKILL.md`, a Skill may include the following optional files or directories:
+
+- `scripts/`: directly executable code for repeated, complex, or deterministic operations such as data processing, format conversion, and output validation.
+- `references/`: supporting material that the Agent reads only for relevant tasks, such as domain knowledge, technical documentation, examples, and data-format specifications.
+- `assets/`: static resources used during execution or included in outputs, such as document templates, configuration templates, images, lookup tables, and schemas.
+- Other files: licenses, human-facing documentation, or any other files and directories needed to complete the task.
+
+All of these are optional. Reference them from `SKILL.md` using paths relative to the Skill root, and state when the Agent should read or execute each one.
+
+Agents usually load a Skill in three stages: at startup, they read only each Skill's `name` and `description` for discovery; when a task matches, they activate and load the full `SKILL.md`; during execution, they read `scripts/`, `references/`, and `assets/` only as needed. This progressive disclosure keeps a large catalog available without consuming unnecessary context.
 
 ## Install Skills
 
-Skills can be used in Claude and ChatGPT apps, IDE and TUI coding tools like Cursor and Claude Code, and other compatible agent harnesses.
+Skills can be used in GUI apps such as Claude and ChatGPT, IDEs such as Cursor, and TUI CLI tools such as Claude Code.
 
-The essence of installing a Skill is simply placing the Skill's folder into a specific directory so that AI can load and use it on demand.
+Installing a Skill essentially means placing its folder in a designated directory so that an Agent can load and use it on demand.
 
 ### Shared Directory Convention
 
@@ -69,25 +87,27 @@ Many compatible clients scan `.agents/skills/` at both project and user scope:
 ~/.agents/skills/<skill-name>/
 ```
 
-A project-level skill normally overrides a user-level skill with the same name. Clients may also scan their own native directories, so confirm exact paths in the product documentation. Because project skills arrive with a repository, inspect the source and contents before trusting skills from an unfamiliar checkout. See the official [client implementation guide](https://agentskills.io/client-implementation/adding-skills-support).
+A project-level Skill normally overrides a user-level Skill with the same name. Clients may also scan their own native directories, so confirm exact paths in the product documentation. Because project Skills arrive with a repository, inspect the source and contents before loading Skills from an unfamiliar checkout.
 
-### Claude App Ecosystem
+### Installing in Apps
 
-![](../assets/media/claude_app.png)
+![](../assets/media/workbuddy.png)
 
 There are currently two main ways to use Skills in the App: install through the App's built-in Skill store, or install by uploading a zip file.
 
+Some Apps now provide a built-in Skill store or management entry point for convenient installation and management.
+
 For Skills not available in the official store, you can download them from the recommended third-party Skill stores below and install them manually.
 
-### Claude Code Ecosystem
+### Installing in the CLI
 
 ![](../assets/media/skills_mp.png)
 
-It is recommended to use the [skillsmp](https://skillsmp.com/zh) marketplace, which automatically indexes all Skill projects on GitHub and organizes them by category, update time, star count, and other tags.
+Use the [skillsmp](https://skillsmp.com/zh) marketplace to discover Skill projects on GitHub and filter them by category, update time, star count, and other tags.
 
 You can also use Vercel's [skills.sh](https://skills.sh/) leaderboard to intuitively view the most popular Skills repositories and individual Skill usage.
 
-For specific skills, use the `npx skills` command-line tool to quickly discover, add, and manage skills. For detailed parameters, see [vercel-labs/skills](https://github.com/vercel-labs/skills).
+For a specific Skill, use the `npx skills` command-line tool to quickly discover, add, and manage it. For detailed parameters, see [vercel-labs/skills](https://github.com/vercel-labs/skills).
 
 ```bash
 npx skills find [query]                          # Search for related skills
@@ -100,18 +120,20 @@ npx skills remove [skill-name]                   # Uninstall skills
 npx skills init [skill-name]                     # Create a skill template
 ```
 
-The current CLI supports more than 70 agents. For version pinning and portable provenance, GitHub CLI 2.90.0+ also provides the public-preview `gh skill` commands:
+The current `skills` CLI supports more than 70 Agents and lets you choose project or global scope, target Agents, and copy or symbolic-link installation. See [vercel-labs/skills](https://github.com/vercel-labs/skills) for current parameters.
+
+If version pinning and supply-chain provenance matter more, GitHub CLI 2.90.0 and later provide the public-preview `gh skill` commands:
 
 ```bash
-gh skill search <query>
-gh skill preview <owner/repo> <skill>
-gh skill install <owner/repo> <skill>@<tag>
-gh skill install <owner/repo> <skill> --pin <sha>
-gh skill update --all
-gh skill publish
+gh skill search <query>                          # Search for Skills
+gh skill preview <owner/repo> <skill>            # Inspect content before installation
+gh skill install <owner/repo> <skill>@<tag>      # Install from a tag
+gh skill install <owner/repo> <skill> --pin <sha> # Pin to a commit
+gh skill update --all                            # Check for and install updates
+gh skill publish                                 # Validate and publish a Skill
 ```
 
-See the [GitHub announcement](https://github.blog/changelog/2026-04-16-manage-agent-skills-with-github-cli/) and the official [Agent Skills client showcase](https://agentskills.io/clients) for host-specific support.
+`gh skill` records the repository, ref, and Git tree SHA, and can be combined with immutable releases, secret scanning, and code scanning. See the [GitHub announcement](https://github.blog/changelog/2026-04-16-manage-agent-skills-with-github-cli/).
 
 ## Quality Tutorials
 
@@ -284,15 +306,11 @@ Reference an existing command directly when it reliably handles a simple one-off
 
 See the official [Using scripts in skills](https://agentskills.io/skill-creation/using-scripts) guide.
 
-### Official Skill
-
-Use Anthropic's maintained [skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator) to create, modify, evaluate, and iterate on Skills.
-
 ### Testing and Evaluation
 
-A successful demo does not prove that a Skill improves an agent. Start with two or three realistic tasks in `evals/evals.json`, recording each `prompt`, `expected_output`, optional input files, and verifiable `assertions`. Run each task in a clean context with and without the skill—or against the previous version—and record pass rate, tokens, wall time, tool calls, and concrete evidence for every PASS or FAIL.
+Skill evaluation has two dimensions. **`description` evaluation** checks whether the Agent activates the Skill when it should and avoids false triggers when it should not. **Skill effectiveness evaluation** checks whether loading the Skill genuinely improves task quality, stability, or efficiency. The first asks, “Can the Agent find the right Skill?” The second asks, “Is the Skill useful once found?” Use a set of realistic tasks with explicit success criteria for regression testing, and compare results against runs without the Skill or with the previous version.
 
-Evaluate triggering separately from output quality. Test `description` against realistic should-trigger and near-miss should-not-trigger queries across varied wording, complexity, and implicit intent, and retain a validation split to avoid keyword overfitting. See the official guides to [evaluating skill output](https://agentskills.io/skill-creation/evaluating-skills) and [optimizing descriptions](https://agentskills.io/skill-creation/optimizing-descriptions).
+For the complete workflow, see the official guides to [evaluating Skill output](https://agentskills.io/skill-creation/evaluating-skills) and [optimizing descriptions](https://agentskills.io/skill-creation/optimizing-descriptions).
 
 - [SkillsBench](https://www.skillsbench.ai/): cross-domain benchmark and leaderboard
 - [microsoft/waza](https://github.com/microsoft/waza): create, test, measure, and improve Skills
@@ -300,10 +318,12 @@ Evaluate triggering separately from output quality. Test `description` against r
 - [alibaba/skill-up](https://github.com/alibaba/skill-up): evaluation and evolution tooling
 - [rpamis/comet](https://github.com/rpamis/comet): turn ideas into evaluated agent workflows
 
-## Acknowledgments
+Existing research points to the same conclusion: a focused Skill with explicit acceptance criteria and continuous regression testing is usually more reliable than an all-encompassing knowledge bundle; an outdated or mismatched Skill can increase cost and even reduce success rates.
+
+## Special Thanks
 
 ![](../assets/media/talk_is_cheap.jpg)
 
 ## Project History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=libukai/awesome-agent-skills&type=date&legend=top-left)](https://www.star-history.com/#libukai/awesome-agent-skills&type=date&legend=top-left)
+[![](../assets/media/20260805233809.png)](https://www.star-history.com/?repos=libukai%2Fawesome-agent-skills&type=date&legend=top-left)
